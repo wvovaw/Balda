@@ -1,0 +1,31 @@
+.main_container {
+    background-color: black;
+    position:absolute;
+    left:0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    grid-template-rows: 10% 85% 5%;
+
+}
+.head_panel {
+    background-color: darkslategray;
+    height: 90px;
+    grid-column: 1 / -1;
+}
+.gamezone {
+    background-color: gainsboro;
+}
+.left_pane {
+    background-color: gray;
+}
+.right_pane {
+    background-color: darkgray;
+}
+.bot_pane {
+    background-color: grey;
+    grid-row: 3;
+    grid-column: 1/4;
+}
