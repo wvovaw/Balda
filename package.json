@@ -1,20 +1,17 @@
 {
   "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "version": "0.1.0",
+  "description": "The \"Balda\" game",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/wvovaw/Balda",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Balda",
+    "Game"
   ],
-  "author": "GitHub",
+  "author": "wvovaw",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^8.2.1"
