@@ -1,12 +1,15 @@
 # The "Balda" game
 ## Description
-This is the game on the 5x5 or higher dimention field that starts from the word on the middle. Players should place a letter to the free circuit and make a new one word. Win the person who have used more letters to assemble words.
+This is the game on the 3x3, 5x5, 7x7, or higher dimention field that starts from the word on the middle row. Players should place a letter to the free circuit and make a new one word. Win the person who have used more letters to assemble words.
 
 # Todo
-- [ ] Build a gamefield
+- [X] Build a gamefield
+- [X] Create a keyboard
 - [ ] Build a header
-- [ ] Hide the native menu
+- [X] Hide the native title bar
 - [ ] Create a color scheme
 - [ ] Build a score bar on the left pane
 - [ ] Build a list of the used words on the right pane 
 - [ ] Fill the bottom pane
+- [ ] Realize drag'n'drop mechanic with letters
+- [ ] Realize word assembling mechanic

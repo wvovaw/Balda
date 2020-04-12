@@ -6,28 +6,31 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <link rel="stylesheet" type="text/css" href="style.css">
-    
     <title>Balda</title>
   </head>
   <body>
-    <div class="main_container">
-      <div class="head_panel">
-        head
+    <div id="main_container">
+      <div id="head_panel">
+        <div id="titlebar">
+          <button class="titlebar_button" id="minimize_button">_</button>
+          <button class="titlebar_button" id="close_button">X</button>
+        </div>
       </div>
-      <div class="left_pane">
+      <div id="left_pane">
       left
       </div>
-      <div class="gamezone">
-        game
+      <div id="gamezone">
+        <div id="gamezone_filler"></div>
       </div>
-      <div class="right_pane">
+      <div id="right_pane">
         right
       </div>
-      <div class="bot_pane">
+      <div id="bot_pane">
         bottom
       </div>  
     </div>
-    <!-- You can also require other files to run in this process -->
+    <!-- Gamefield script -->
     <script src="./renderer.js"></script>
+    <script src="./gamefield.js"></script>
   </body>
 </html>
