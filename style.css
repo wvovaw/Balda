@@ -127,3 +127,6 @@ body {
 #remove_word_button {
     pointer-events: none;    
 }
+.rp_button:hover {
+    background-color: #313131;
+}

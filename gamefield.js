@@ -1,7 +1,7 @@
 window.onload = function() {
   //Game field (All the letters is empty at the begining)
   for (var i = 0; i < 49; i++) {
-    document.getElementById('gamezone').innerHTML += '<div class="letterblock empty"></div>';    
+    document.getElementById('gamezone').innerHTML += '<div id="' + i + '" class="letterblock empty"></div>';    
   }
   //Keyboard
   var rus_alph = '?АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
@@ -38,9 +38,12 @@ window.onload = function() {
     empty.addEventListener('dragleave', dragLeave);
     empty.addEventListener('drop', dragDrop);
   }
-  var letter_text;  //variable of a choosed letter
+
+  var letterText;  //variable of a choosed letter
+  var filledLetterblock = null; //variable to remember where the letter was set
+
   function dragStart() {
-    letter_text = this.innerHTML;
+    letterText = this.innerHTML;
     this.className += ' hold';
   }
   function dragEnd() {
@@ -57,12 +60,23 @@ window.onload = function() {
     this.className = 'letterblock empty';
   }
   function dragDrop() {
-    this.innerHTML = letter_text;
+    this.innerHTML = letterText;
     this.className = 'letterblock';
+    filledLetterblock = this;
     //Block until the end of turn or deleting of the last placed letter
     for(const letter of letters) {
       letter.style.pointerEvents = 'none';
       letter.style.backgroundColor = '#606060'
     }
+    document.getElementById('remove_letter_button').style.pointerEvents = 'auto';
   }
+
+  document.getElementById('remove_letter_button').addEventListener('click', () => {
+    filledLetterblock.innerHTML = '';
+    for(const letter of letters) {
+      letter.style.pointerEvents = 'auto';
+      letter.style.backgroundColor = '#909090'
+    }
+    document.getElementById('remove_letter_button').style.pointerEvents = 'none';
+  })  
 }
