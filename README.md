@@ -9,7 +9,7 @@ This is the game on the 3x3, 5x5, 7x7, or higher dimention field that starts fro
 - [X] Hide the native title bar
 - [ ] Create a color scheme
 - [ ] Build a score bar on the left pane
-- [ ] Build a list of the used words on the right pane 
+- [X] Build a list of the used words on the right pane 
 - [ ] Fill the bottom pane
-- [ ] Realize drag'n'drop mechanic with letters
+- [X] Realize drag'n'drop mechanic with letters
 - [ ] Realize word assembling mechanic
