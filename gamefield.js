@@ -3,9 +3,61 @@ window.onload = function() {
   for (var i = 0; i < 49; i++) {
     document.getElementById('gamezone').innerHTML += '<div id="' + i + '" class="empty letterblock"></div>';    
   }
+  //Adjacency list
+  var adjacencyList = [
+    [1, 7], // 0
+    [0, 2, 8], //1
+    [1, 3, 9], //2
+    [2, 4, 10], //3
+    [3, 5, 11], //4
+    [4, 6, 12], //5
+    [5, 13], //6
+    [0, 8, 14], //7
+    [1, 7, 9, 15], // 8
+    [2, 8, 10, 16], //9
+    [3, 9, 11, 17], //10
+    [4, 10, 12, 18], //11
+    [5, 11, 13, 19], //12
+    [6, 12, 20], //13
+    [7, 15, 21], //14
+    [8, 14, 16, 22], //15
+    [9, 15, 17, 23], //16
+    [10, 16, 18, 24], // 17
+    [11, 17, 19, 25], //18
+    [12, 18, 20, 26], //19
+    [13, 19, 27], //20
+    [14, 22, 28], //21
+    [15, 21, 23, 29], //22
+    [16, 22, 24, 30], //23
+    [17, 23, 25, 31], //24
+    [18, 24, 26, 32], //25
+    [19, 25, 27, 33], //26
+    [20, 26, 34], //27
+    [21, 29, 35], //28
+    [22, 28, 30, 36], //29
+    [23, 29, 31, 37], //30
+    [24, 30, 32, 38], //31
+    [25, 31, 33, 39], //32
+    [26, 32, 34, 40], //33
+    [27, 33, 41], //34
+    [28, 36, 42], //35
+    [29, 35, 37, 43], //36
+    [30, 36, 38, 44], //37
+    [31, 37, 39, 45], //38
+    [32, 38, 40, 46], //39
+    [33, 39, 41, 47], //40
+    [34, 40, 48], //41
+    [35, 43], //42
+    [36, 42, 44], //43
+    [37, 43, 45], //44
+    [38, 44, 46], //45
+    [39, 45, 47], //46
+    [40, 46, 48], //47
+    [41, 47] //48
+  ];
   //Keyboard
   var rus_alph = '?АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
-  var eng_alph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  var eng_alph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   //Realize multilanguage feature
   var gameLanguage = rus_alph; 
   document.getElementById('gamezone').innerHTML += '<div id="keyboard"></div>'; 
@@ -124,4 +176,21 @@ drawInitWord();
 
   */
 
+  let wordStack = Array();
+  for(filled of filleds) {
+    filled.addEventListener('click', markLetter);
+  }
+  function markLetter() {
+    if(wordStack.indexOf(this) > -1) return;
+    else if(wordStack.length === 0) {
+      this.className += ' hovered';
+      wordStack = new Array(wordStack, this);
+      return;
+    } 
+    let lastId = wordStack[wordStack.length - 1];
+    if(adjacencyList[lastId.getAttribute('id')].includes(Number(this.getAttribute('id')))) {
+      this.className += ' hovered';
+      wordStack.push(this);
+    } 
+  }
 }
