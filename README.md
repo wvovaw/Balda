@@ -12,4 +12,4 @@ This is the game on the 3x3, 5x5, 7x7, or higher dimention field that starts fro
 - [X] Build a list of the used words on the right pane 
 - [ ] Fill the bottom pane
 - [X] Realize drag'n'drop mechanic with letters
-- [ ] Realize word assembling mechanic
+- [X] Realize word assembling mechanic
