@@ -67,19 +67,19 @@ window.onload = function() {
 
   function drawInitWord() {
     var gamezone = document.getElementById('gamezone');
-    gamezone.children[22].innerHTML = 'А';
+    gamezone.children[22].innerHTML = 'П';
     gamezone.children[22].className = 'letterblock filled';
-    gamezone.children[23].innerHTML = 'Б';
+    gamezone.children[23].innerHTML = 'А';
     gamezone.children[23].className = 'letterblock filled';
-    gamezone.children[24].innerHTML = 'В';
+    gamezone.children[24].innerHTML = 'Р';
     gamezone.children[24].className = 'letterblock filled';
-    gamezone.children[25].innerHTML = 'Г';
+    gamezone.children[25].innerHTML = 'О';
     gamezone.children[25].className = 'letterblock filled';
-    gamezone.children[26].innerHTML = 'Д';
+    gamezone.children[26].innerHTML = 'Х';
     gamezone.children[26].className = 'letterblock filled';
-    gamezone.children[27].innerHTML = 'Е';
+    gamezone.children[27].innerHTML = 'О';
     gamezone.children[27].className = 'letterblock filled';
-    gamezone.children[28].innerHTML = 'Ё';
+    gamezone.children[28].innerHTML = 'Д';
     gamezone.children[28].className = 'letterblock filled';
 }
 drawInitWord();
@@ -95,10 +95,10 @@ drawInitWord();
   3) Open the keyboard if turn has begun or the letter was removed from the field 
    */
   //Collections of elements by class
-  const letters = document.querySelectorAll('.letter');
-  const empties = document.querySelectorAll('.empty');
-  var filleds = document.querySelectorAll('.filled');
-  var letterText;  //variable of a choosed letter
+  let letters = document.querySelectorAll('.letter');
+  let empties = document.querySelectorAll('.empty');
+  let filleds = document.querySelectorAll('.filled');
+  let letterText;  //variable of a choosed letter
 
   //Events for letters
   for(const letter of letters) {
@@ -138,13 +138,18 @@ drawInitWord();
       letter.style.pointerEvents = 'none';
       letter.style.backgroundColor = '#606060';
     }
-    filleds = new Array(filleds, this);
+    this.addEventListener('click', markLetter);
+    //Rebuild filleds
+    filleds = document.querySelectorAll('.filled');
+
+    console.log(filleds);
     //Unlock word assembly
     
     document.getElementById('remove_letter_button').style.pointerEvents = 'auto';
   }
-  
+  //Remove letter event
   document.getElementById('remove_letter_button').addEventListener('click', () => {
+    if(wordStack.length > 0) removeWord();
     letterToRemove = document.querySelector('.lastFilled');
     letterToRemove.innerHTML = '';
     letterToRemove.className = 'empty letterblock';
@@ -153,9 +158,21 @@ drawInitWord();
       letter.style.backgroundColor = '#909090';
     }
     filleds--;
+    wordStack = Array();
     document.getElementById('remove_letter_button').style.pointerEvents = 'none';
+    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
   });
-
+  //Remove word event
+  document.getElementById('remove_word_button').addEventListener('click', removeWord);
+  function removeWord() {
+    for(letterblock of wordStack) {
+      if(String(letterblock.className).includes('lastFilled')) letterblock.className = 'letterblock filled lastFilled';
+      else letterblock.className = 'letterblock filled';
+    }
+    wordStack = Array();
+    document.getElementById('remove_word_button').style.pointerEvents = 'none';
+    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
+  }
   /* Word assembling:
   1) Set a letter 
   2) click on the 1-st letter of the needed word
@@ -181,6 +198,7 @@ drawInitWord();
     filled.addEventListener('click', markLetter);
   }
   function markLetter() {
+    if(document.querySelector('.lastFilled') === null) return;
     if(wordStack.indexOf(this) > -1) return;
     else if(wordStack.length === 0) {
       this.className += ' hovered';
@@ -192,5 +210,45 @@ drawInitWord();
       this.className += ' hovered';
       wordStack.push(this);
     } 
+    document.getElementById('remove_word_button').style.pointerEvents = 'auto';
+    if(wordStack.includes(document.querySelector('.lastFilled'))) document.getElementById('confirm_word_button').style.pointerEvents = 'auto';
+  }
+  // Confirm button
+  let completeWord = ''; 
+  document.getElementById('confirm_word_button').addEventListener('click', () => {
+    //Rebuild empties
+    empties = document.querySelectorAll('.empty');
+    wordStack = wordStack.slice(1);
+    for(letterblock of wordStack) {
+      //Remove event listener of empty class
+      if(String(letterblock.className).includes('lastFilled')) {
+        letterblock.removeEventListener('dragover', dragOver);
+        letterblock.removeEventListener('dragenter', dragEnter);
+        letterblock.removeEventListener('dragleave', dragLeave);
+        letterblock.removeEventListener('drop', dragDrop);
+      }
+      else letterblock.className = 'letterblock filled';
+      completeWord += letterblock.innerHTML;
+    }
+    document.getElementById('used_words').innerHTML += '<li>' + completeWord + '</li>';
+    for(letterblock of wordStack) {
+      letterblock.className = 'letterblock filled';
+    }
+    wordStack = Array();
+    document.getElementById('remove_letter_button').style.pointerEvents = 'none';
+    document.getElementById('remove_word_button').style.pointerEvents = 'none';
+    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
+    newTurn();
+  });
+  function newTurn() {
+    //Unlock the keyboard
+    for(const letter of letters) {
+      letter.style.pointerEvents = 'auto';
+      letter.style.backgroundColor = '#909090';
+    }
+    //clear wordStack
+    wordStack = Array();
+    //Clear word
+    completeWord = '';
   }
 }

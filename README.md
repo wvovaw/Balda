@@ -5,11 +5,12 @@ This is the game on the 3x3, 5x5, 7x7, or higher dimention field that starts fro
 # Todo
 - [X] Build a gamefield
 - [X] Create a keyboard
-- [ ] Build a header
 - [X] Hide the native title bar
-- [ ] Create a color scheme
-- [ ] Build a score bar on the left pane
-- [X] Build a list of the used words on the right pane 
-- [ ] Fill the bottom pane
 - [X] Realize drag'n'drop mechanic with letters
 - [X] Realize word assembling mechanic
+- [X] Finish the main game conception (place a letter, assemble a word, confirm it)
+- [ ] Build a list of the used words on the right pane 
+- [ ] Build a header
+- [ ] Create a color scheme
+- [ ] Build a score bar on the left pane
+- [ ] Fill the bottom pane
