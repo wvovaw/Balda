@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="./dark.min.css">
+    <!--Font Awesome lib-->
+    <link rel="stylesheet" type="text/css" href="./node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" type="text/css" href="titlebar.css">
+    <link rel="stylesheet" type="text/css" href="login.css">
+    <title>Balda: log-in</title>
+  </head>
+  <body>
+    <main id="main_container">
+        <div id="head_panel">
+            <div id="titlebar">
+              <div class="titlebar_button" id="minimize_button"></div>
+              <div class="titlebar_button" id="close_button"></div>
+            </div>
+        </div>
+        <div id="login_card_container">
+            <div id="login_card">
+                <form id="log-in">
+                    <i class="fas fa-user-circle" id="add_avatar_button"></i>
+                    <input type="text" name="username" id="username" autofocus>
+                    <button id="enter_button">Войти</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+#main_container {
+    background-color: #282a36;
+    position: absolute;
+    left:0;
+    right:0;
+    top: 0;
+    bottom: 0;
+}
+#login_card_container {
+    height: 673px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#login_card {
+    background-color: #44475a;
+    border-radius: 25px;
+    width: 350px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#log-in {
+    display: grid;
+    align-items: center;
+    flex-direction: column;
+}
+#add_avatar_button {
+    font-size: 150px;
+    margin-left: 39px;
+    margin-bottom: 30px;
+}
