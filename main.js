@@ -1,5 +1,6 @@
 const {app, BrowserWindow, Menu} = require('electron')
 const path = require('path')
+require('electron-reload')(__dirname);
 Menu.setApplicationMenu(false)
 function createWindow () {
   const mainWindow = new BrowserWindow({
@@ -12,7 +13,7 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('login.html');
   mainWindow.webContents.openDevTools();
 }
 app.whenReady().then(createWindow)

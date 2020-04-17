@@ -56,7 +56,7 @@ window.onload = function() {
     [41, 47] //48
   ];
   //Keyboard
-  var rus_alph = '?АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+  var rus_alph = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
   var eng_alph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   //Realize multilanguage feature
   var gameLanguage = rus_alph; 
@@ -69,17 +69,17 @@ window.onload = function() {
     var gamezone = document.getElementById('gamezone');
     gamezone.children[22].innerHTML = 'П';
     gamezone.children[22].className = 'letterblock filled';
-    gamezone.children[23].innerHTML = 'А';
+    gamezone.children[23].innerHTML = 'И';
     gamezone.children[23].className = 'letterblock filled';
-    gamezone.children[24].innerHTML = 'Р';
+    gamezone.children[24].innerHTML = 'Д';
     gamezone.children[24].className = 'letterblock filled';
-    gamezone.children[25].innerHTML = 'О';
+    gamezone.children[25].innerHTML = 'А';
     gamezone.children[25].className = 'letterblock filled';
-    gamezone.children[26].innerHTML = 'Х';
+    gamezone.children[26].innerHTML = 'Р';
     gamezone.children[26].className = 'letterblock filled';
-    gamezone.children[27].innerHTML = 'О';
+    gamezone.children[27].innerHTML = 'А';
     gamezone.children[27].className = 'letterblock filled';
-    gamezone.children[28].innerHTML = 'Д';
+    gamezone.children[28].innerHTML = 'С';
     gamezone.children[28].className = 'letterblock filled';
 }
 drawInitWord();
@@ -230,7 +230,9 @@ drawInitWord();
       else letterblock.className = 'letterblock filled';
       completeWord += letterblock.innerHTML;
     }
-    document.getElementById('used_words').innerHTML += '<li>' + completeWord + '</li>';
+    for(var i = 0; i < 22; i++) {
+      document.getElementById('used_words').innerHTML += '<div class="used_word">' + completeWord + '</div>';
+    }
     for(letterblock of wordStack) {
       letterblock.className = 'letterblock filled';
     }
@@ -251,4 +253,5 @@ drawInitWord();
     //Clear word
     completeWord = '';
   }
+
 }

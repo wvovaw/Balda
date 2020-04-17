@@ -4,7 +4,8 @@
   "description": "The \"Balda\" game",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "startClient": "electron .",
+    "startServer": "nodemon ./Server/server"
   },
   "repository": "https://github.com/wvovaw/Balda",
   "keywords": [
@@ -14,6 +15,15 @@
   "author": "wvovaw",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^8.2.1"
+    "electron": "^8.2.1",
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "electron-reload": "^1.5.0",
+    "express": "^4.17.1",
+    "font-awesome": "^4.7.0",
+    "material-design-lite": "^1.3.0",
+    "socket.io": "^2.3.0"
   }
 }
