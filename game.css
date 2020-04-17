@@ -1,24 +1,6 @@
 body {
     -webkit-user-select: none;
 }
-#titlebar {
-    -webkit-app-region: drag;
-    height: 25px;
-    background-color: transparent;
-    display: flex;
-    align-content: flex-start;
-}
-.titlebar_button {
-    -webkit-app-region: no-drag;
-    border: 1px black solid;
-    width: fit-content;
-    height: fit-content;
-    margin-left: 1%;
-}
-/* #close_button {} */
-#minimize_button {
-    margin-left: auto;
-}
 #main_container {
     background-color: green;
     position: absolute;
@@ -26,30 +8,31 @@ body {
     right:0;
     top: 0;
     bottom: 0;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: 23% 54% 23%;
-    grid-template-rows: 15% 82% 3%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
 }
-#head_panel {
-    background-color: #525252;
+#titlebar {
     grid-column: 1 / -1;
 }
 #left_pane {
-    background-color: #313131;
+    background-color: #282a36;
 }
 #right_pane {
-    background-color: #313131;
+    background-color: #282a36;
     position: relative;
 }
 #bot_pane {
-    background-color: #525252;
-    grid-row: 3;
+    background-color: #1f212b;
+    height: 24px;
+    grid-row: 4;
     grid-column: 1/4;
 }
 /* The gamezone styles */
 #gamezone {
-    background-color: #414141;
-    
+    height: 93vh;
+    background-color: #44475a;
     display: grid;
     grid-template-columns: 72px 72px 72px 72px 72px 72px 72px;
     grid-template-rows: 10px 72px 72px 72px 72px 72px 72px 72px 50px;
@@ -72,61 +55,80 @@ body {
     grid-column: 1/-1;
     display: grid;
     background-color: transparent;
-    grid-template-columns: repeat(17, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(3, 1fr);
 }
 .letter {
-    margin-left: 12%;
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
+    margin-top: 10px;
+    margin-left: 20%;
     background-color: #909090;
     color: #131313;
     border: 1px #131313 solid;
     border-radius: 10%;
-    width: 22px;
-    height: 22px;
+    width: 30px;
+    height: 30px;
     box-sizing: border-box;
     box-shadow: 2px 2px 1px 0px black;
 
 }
 /* Drag'n'drop classes */
 .hovered {
-    border-color: #ca3e47;
+    border-color: #50fa7b;
 }
 .hold {
-    border: 2px #ca3e47 solid;
+    border: 2px #50fa7b solid;
 }
 .invisible {
     display: none;
 }
 /* Right pane */
 #wordlist {
-    border: 1px black solid;
+    height: 500px;
+}
+.used_word {
+    margin: 3px;
+}
+#used_words {
+    height: 98%;
+    width: 80%;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 #right_pane_buttons {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 5px;
+    height: 16%;
     display: grid;
+    margin-top: 5px;
+    grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
-    justify-content: space-around;
-
 }
 .rp_button {
-    background-color: #414141;
-    box-shadow: 2px 2px 1px 0px black;
-    width: 80px;
     height: fit-content;
-    margin-left: 17px;
     text-align: center;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 2px;
+    justify-content: space-around;
+    background-color: #44475a;
+
+}
+#confirm_word_button {
+    padding: 3px;
+    pointer-events: none;
+    height: 40px;
+    grid-column: 1/-1;
 }
 #remove_letter_button {
     pointer-events: none;
+    grid-row: 2;
+    margin-bottom: 10px;
+    margin-top: 13px;
 }
 #remove_word_button {
-    pointer-events: none;    
-}
-.rp_button:hover {
-    background-color: #313131;
+    pointer-events: none;
+    grid-row: 2;
+    margin-bottom: 10px;
+    margin-top: 13px;
 }

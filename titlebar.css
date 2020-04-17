@@ -1,0 +1,34 @@
+#titlebar {
+    -webkit-app-region: drag;
+    height: 25px;
+    background-color: #1f212b;
+    display: flex;
+    align-content: flex-start;
+    -webkit-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+    box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+}
+.titlebar_button {
+    -webkit-app-region: no-drag;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    margin-left: 8px;
+    margin-right: 10px;
+    margin-top: 4px;
+    transition: opacity 300ms;
+    opacity: 70%;
+}
+.titlebar_button:hover {
+    opacity: 100%;
+}
+#close_button {
+    background-color: #ff5555;
+}
+#minimize_button {
+    background-color: #f1fa8c;
+}
+/* #close_button {} */
+#minimize_button {
+    margin-left: auto;
+}
