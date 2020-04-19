@@ -5,16 +5,17 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="./dark.min.css">
+    <link rel="stylesheet" type="text/css" href="./node_modules/@fortawesome/fontawesome-free/css/all.css">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="titlebar.css">
     <title>Balda</title>
   </head>
   <body>
     <div id="main_container">
-      <div id="head_panel">
-        <div id="titlebar">
-          <button class="titlebar_button" id="minimize_button">_</button>
-          <button class="titlebar_button" id="close_button">X</button>
-        </div>
+      <div id="titlebar">
+        <div class="titlebar_button" id="minimize_button"></div>
+        <div class="titlebar_button" id="close_button"></div>
       </div>
       <div id="left_pane">
       left
@@ -24,11 +25,12 @@
       </div>
       <div id="right_pane">
         <div id="wordlist">
-          <ul id="words"></ul>
+          <ul id="used_words"></ul>
         </div>
         <div id="right_pane_buttons">
-          <div class="rp_button" id="remove_letter_button">Удалить букву</div>
-          <div class="rp_button" id="remove_word_button">Удалить слово</div>
+          <button class="rp_button" id="confirm_word_button">Отправить слово</button>
+          <button class="rp_button" id="remove_letter_button">Удалить букву</button>
+          <button class="rp_button" id="remove_word_button">Удалить слово</button>
         </div>
       </div>
       <div id="bot_pane">
@@ -36,6 +38,7 @@
       </div>  
     </div>
     <!-- Gamefield script -->
+    <script src="/socket.io/socket.io.js"></script>
     <script src="./renderer.js"></script>
     <script src="./gamefield.js"></script>
   </body>
