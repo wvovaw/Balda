@@ -82,7 +82,7 @@ button:hover,input[type=button]:hover,input[type=submit]:hover{
     background:#324759
 }
 button:focus,input:focus,select:focus,textarea:focus{
-    box-shadow:0 0 0 2px rgba(0,150,191,.67)
+    box-shadow:0 0 0 2px #6272a4
 }
 button:active,input[type=button]:active,input[type=checkbox]:active,input[type=radio]:active,input[type=submit]:active{
     transform:translateY(2px)
@@ -148,6 +148,7 @@ tbody tr:nth-child(2n){
     width:10px
 }
 ::-webkit-scrollbar-track{
+    margin-right: 20px;
     background:#161f27;
     border-radius:6px
 }
@@ -160,3 +161,7 @@ tbody tr:nth-child(2n){
 }
 /*# sourceMappingURL=dark.min.css.map */
  
+/* my changes */
+::selection {
+    background-color: #ff79c6;
+}

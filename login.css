@@ -1,3 +1,6 @@
+body {
+    -webkit-user-select: none;
+}
 #main_container {
     background-color: #282a36;
     position: absolute;

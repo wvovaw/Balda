@@ -1,9 +1,10 @@
 const {app, BrowserWindow, Menu} = require('electron')
 const path = require('path')
 require('electron-reload')(__dirname);
-Menu.setApplicationMenu(false)
+Menu.setApplicationMenu(false);
+let mainWindow;
 function createWindow () {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 980,
     height: 700,
     frame: false,
@@ -13,10 +14,16 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-  mainWindow.loadFile('login.html');
+  mainWindow.loadFile('lobbylist.html');
   mainWindow.webContents.openDevTools();
 }
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
+
+const {ipcMain} = require('electron');
+ipcMain.on('success_login', (event, arg) => {
+  mainWindow.loadFile('lobbylist.html');
+  });
+
 app.on('window-all-closed', function () {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
