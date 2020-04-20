@@ -1,12 +1,13 @@
 #titlebar {
     -webkit-app-region: drag;
     height: 25px;
-    background-color: #1f212b;
+    background-color: #14151b;
     display: flex;
     align-content: flex-start;
     -webkit-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
     box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+    border-bottom: 1px black  solid;
 }
 .titlebar_button {
     -webkit-app-region: no-drag;

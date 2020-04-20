@@ -8,20 +8,20 @@ function createWindow () {
     width: 980,
     height: 700,
     frame: false,
-    resizable: false,
+    resizable: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
     }
   })
-  mainWindow.loadFile('lobbylist.html');
+  mainWindow.loadFile(`./html/login.html`);
   mainWindow.webContents.openDevTools();
 }
 app.whenReady().then(createWindow);
 
 const {ipcMain} = require('electron');
 ipcMain.on('success_login', (event, arg) => {
-  mainWindow.loadFile('lobbylist.html');
+  mainWindow.loadFile('./html/lobbylist.html');
   });
 
 app.on('window-all-closed', function () {

@@ -5,12 +5,12 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
     <meta http-equiv="X-Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
-    <link rel="stylesheet" href="./node_modules/normalize.css/normalize.css">
-    <link rel="stylesheet" href="./dark.min.css">
+    <link rel="stylesheet" href="../node_modules/normalize.css/normalize.css">
+    <link rel="stylesheet" href="./css/dark.min.css">
     <!--Font Awesome lib-->
-    <link rel="stylesheet" type="text/css" href="./node_modules/@fortawesome/fontawesome-free/css/all.css">
-    <link rel="stylesheet" type="text/css" href="titlebar.css">
-    <link rel="stylesheet" type="text/css" href="lobbylist.css">
+    <link rel="stylesheet" type="text/css" href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" type="text/css" href="./css/titlebar.css">
+    <link rel="stylesheet" type="text/css" href="./css/lobbylist.css">
     <title>Balda: lobby list</title>
   </head>
   <body>
@@ -23,8 +23,8 @@
         </div>
         <div class="pane" id="top">
             <div id="user_profile_card">
-                <img id="user_profile_avatar" src="https://picsum.photos/100/100?random=1">
-                <div id="user_profile_username">SampleName1488</div>
+                <img id="user_profile_avatar" src="https://picsum.photos/95/95?random=1">
+                <div id="user_profile_username">logoprostata_games</div>
                 <div id="user_profile_userlvl">228lvl 1337/3220 </div>
             </div>
             <div id="search_block">
@@ -49,8 +49,8 @@
         <div class="pane"  id="bot">Bot</div>
     </main>
     <!-- <script type="text/javascript" src="./Server/lib/socket.io.js"></script> -->
-    <script src="./Server/lib/socket.io.js"></script>
-    <script src="./lobbylist.js"></script>
-    <script src="./renderer.js"></script>
+    <script src="../Server/lib/socket.io.js"></script>
+    <script src="../js/lobbylist.js"></script>
+    <script src="../js/renderer.js"></script>
   </body>
 </html>

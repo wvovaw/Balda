@@ -18,3 +18,20 @@ function fill_lobby_list() {
 setTimeout(() => {
     fill_lobby_list();
 }, 100);
+
+let create_lobby_win;
+document.getElementById('new_lobby').addEventListener('click', () => {
+    let create_lobby_win = new remote.BrowserWindow({
+        width: 400,
+        height: 200,
+        frame: false,
+        resizable: false,
+        parent: remote.getCurrentWindow(),
+        modal: true,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    create_lobby_win.loadFile('./html/create_lobby.html');
+    create_lobby_win.webContents.openDevTools();
+});
