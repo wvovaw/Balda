@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
+    <meta http-equiv="X-Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
+    <link rel="stylesheet" href="./css/dark.min.css">
+    <!--Font Awesome lib-->
+    <link rel="stylesheet" type="text/css" href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" type="text/css" href="./css/create_lobby.css">
+    <title>Balda: log-in</title>
+  </head>
+  <body>
+    <main id="main_container">
+        <div class="wrapper" id="w1">
+            <p id="lobby_title_sign">Имя лобби</p>
+            <input type="text" name="lobby_title" id="lobby_title" autofocus>
+        </div>
+        <div class="wrapper" id="w2">
+            <p id="lobby_pass_sign">Пароль</p>
+            <i id="i_lock" class="fas fa-unlock"></i>
+            <input type="password" name="pass" id="pass">
+            <i id="i_user" class="fas fa-user"></i>
+            <select name="cars">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select> 
+        </div>
+        <div class="wrapper" id="w3">
+            <button id="cancel_button">Отмена</button>
+            <button id="confirm_button">Готово</button>
+        </div>
+    </main>
+    <!-- <script type="text/javascript" src="./Server/lib/socket.io.js"></script> -->
+    <script src="../Server/lib/socket.io.js"></script>
+    <script src="../js/renderer.js"></script>
+    <script src="../js/create_lobby.js"></script>
+  </body>
+</html>

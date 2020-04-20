@@ -1,0 +1,48 @@
+body {
+    -webkit-user-select: none;
+}
+#main_container {
+    background-color: #282a36;
+    position: absolute;
+    left:0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    padding: 7px;
+    border: 3px #14151b solid;
+
+}
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#w2 {
+    margin-top: 7px;
+}
+#w3 {
+    margin-top: 27px;
+}
+#lobby_title {
+    width: 250px;
+}
+input {
+    height: 15px;
+    margin-top: 10px;
+}
+#i_lock {
+    margin: 17px 15px 0px 10px;
+    font-size: 22px;
+}
+#pass {
+    width: 150px;
+}
+#i_user {
+    margin: 17px 0px 0px 10px;
+}
+#number_of_players {
+    width: 30px;
+}
+#cancel_button {
+    margin-left: auto;
+}
