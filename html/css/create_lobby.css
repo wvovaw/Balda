@@ -10,7 +10,6 @@ body {
     bottom: 0;
     padding: 7px;
     border: 3px #14151b solid;
-
 }
 .wrapper {
     display: flex;
@@ -36,6 +35,9 @@ input {
 }
 #pass {
     width: 150px;
+}
+.innactive {
+    pointer-events: none;
 }
 #i_user {
     margin: 17px 0px 0px 10px;
