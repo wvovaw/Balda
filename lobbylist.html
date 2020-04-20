@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
+    <meta http-equiv="X-Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
+    <link rel="stylesheet" href="./node_modules/normalize.css/normalize.css">
+    <link rel="stylesheet" href="./dark.min.css">
+    <!--Font Awesome lib-->
+    <link rel="stylesheet" type="text/css" href="./node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" type="text/css" href="titlebar.css">
+    <link rel="stylesheet" type="text/css" href="lobbylist.css">
+    <title>Balda: lobby list</title>
+  </head>
+  <body>
+    <main id="main_container">
+        <div id="head_panel">
+            <div id="titlebar">
+              <div class="titlebar_button" id="minimize_button"></div>
+              <div class="titlebar_button" id="close_button"></div>
+            </div>
+        </div>
+        <div class="pane" id="top">
+            <div id="user_profile_card">
+                <img id="user_profile_avatar" src="https://picsum.photos/100/100?random=1">
+                <div id="user_profile_username">SampleName1488</div>
+                <div id="user_profile_userlvl">228lvl 1337/3220 </div>
+            </div>
+            <div id="search_block">
+                <input type="text" name="lobby_query" id="lobby_query">
+                <button id="search_lobby"><i class="fas fa-search"></i></button>
+                <button id="new_lobby"><i class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="pane"  id="left">
+            <ul id="chat_list">
+                <!--Make a chat-->
+            </ul>
+            <input type="text" name="chat_input" id="chat_input" maxlength="120" minlength="1">
+            <button id="send_message"><i class="far fa-paper-plane"></i></button>
+        </div>
+        <div class="pane"  id="center">
+            <ui id="lobby_list">
+                <!--LobbyBlocks-->
+            </ui>
+        </div>
+        <div class="pane"  id="bot">Bot</div>
+    </main>
+    <!-- <script type="text/javascript" src="./Server/lib/socket.io.js"></script> -->
+    <script src="./Server/lib/socket.io.js"></script>
+    <script src="./lobbylist.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
