@@ -1,11 +1,12 @@
 var socket = io.connect('http://localhost:3010');
-
-
 var ipc = require('electron').ipcRenderer;
+var fs = require('fs');
 
 let username;
+
 socket.on('success_login', () => {
   console.log(`Log-inned as ${username}!`);
+  window.username = username;
   ipc.send('success_login', 'an-argument');
 });
 socket.on('wrong_username', () => {
@@ -24,5 +25,9 @@ document.getElementById('enter_button').addEventListener('click', (e) => {
             document.getElementById('wrong_username').id = "username";
         }, 1000);
     }
-    else { socket.emit('user_login', `{"username" : "${username}"}`); }
+    else {
+        socket.emit('user_login', `{"username" : "${username}"}`);
+        sessionStorage.setItem('username', username);    
+        fs.writeFileSync('./cfg.json', `{"username" : "${username}"}`);
+    }
 });

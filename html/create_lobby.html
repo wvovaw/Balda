@@ -19,10 +19,10 @@
         </div>
         <div class="wrapper" id="w2">
             <p id="lobby_pass_sign">Пароль</p>
-            <i id="i_lock" class="fas fa-unlock"></i>
-            <input type="password" name="pass" id="pass">
+            <i id="i_lock" class="fas fa-lock-open"></i>
+            <input type="password" name="pass" id="pass" class="innactive" tabindex="-1">
             <i id="i_user" class="fas fa-user"></i>
-            <select name="number_of_players">
+            <select name="number_of_players" id="number_of_players">
               <option value="2">2</option>
               <option value="3">3</option>
               <option value="4">4</option>
@@ -36,7 +36,6 @@
     </main>
     <!-- <script type="text/javascript" src="./Server/lib/socket.io.js"></script> -->
     <script src="../Server/lib/socket.io.js"></script>
-    <script src="../js/renderer.js"></script>
     <script src="../js/create_lobby.js"></script>
   </body>
 </html>

@@ -12,6 +12,9 @@
     "Balda",
     "Game"
   ],
+  "nodemonConfig": {
+    "ignore": ["*.json"]
+  },
   "author": "wvovaw",
   "license": "CC0-1.0",
   "devDependencies": {

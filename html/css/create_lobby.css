@@ -32,6 +32,7 @@ input {
 #i_lock {
     margin: 17px 15px 0px 10px;
     font-size: 22px;
+    width: 20px;
 }
 #pass {
     width: 150px;
@@ -44,7 +45,12 @@ input {
 }
 #number_of_players {
     width: 30px;
+    height: 40px;
+    margin-top: 6px;
 }
 #cancel_button {
     margin-left: auto;
+}
+.wrong_input:focus {
+    box-shadow:0 0 0 2px rgba(206, 6, 39, 0.67)
 }
