@@ -1,3 +1,7 @@
+var socket = io.connect('http://localhost:3010');
+var ipc = require('electron').ipcRenderer;
+var fs = require('fs');
+
 window.onload = function() {
   //Game field (All the letters is empty at the begining)
   for (var i = 0; i < 49; i++) {
@@ -65,24 +69,24 @@ window.onload = function() {
     document.getElementById('keyboard').innerHTML += '<div class="letter" draggable="true">' + gameLanguage[i] + '</div>';    
   }
 
-  function drawInitWord() {
+  function drawInitWord(word) {
     var gamezone = document.getElementById('gamezone');
-    gamezone.children[22].innerHTML = 'П';
+    gamezone.children[22].innerHTML = word[0];
     gamezone.children[22].className = 'letterblock filled';
-    gamezone.children[23].innerHTML = 'И';
+    gamezone.children[23].innerHTML = word[1];
     gamezone.children[23].className = 'letterblock filled';
-    gamezone.children[24].innerHTML = 'Д';
+    gamezone.children[24].innerHTML = word[2];
     gamezone.children[24].className = 'letterblock filled';
-    gamezone.children[25].innerHTML = 'А';
+    gamezone.children[25].innerHTML = word[3];
     gamezone.children[25].className = 'letterblock filled';
-    gamezone.children[26].innerHTML = 'Р';
+    gamezone.children[26].innerHTML = word[4];
     gamezone.children[26].className = 'letterblock filled';
-    gamezone.children[27].innerHTML = 'А';
+    gamezone.children[27].innerHTML = word[5];
     gamezone.children[27].className = 'letterblock filled';
-    gamezone.children[28].innerHTML = 'С';
+    gamezone.children[28].innerHTML = word[6];
     gamezone.children[28].className = 'letterblock filled';
 }
-drawInitWord();
+drawInitWord('ПИДАРАС');
 
  //drag'n'drop
   /*
@@ -254,4 +258,14 @@ drawInitWord();
     completeWord = '';
   }
 
+//Socket work
+
+  let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
+  let username = userProfile.username;
+  let userAvatar = userProfile.userAvatar;
+  let lobbyId = userProfile.lobbyId;
+  socket.emit('join_lobby', lobbyId);
+  socket.on('playerConnected', () => {
+    document.getElementById('tierlist').innerHTML += `<li class="player">${username}</li>`;
+  });
 }

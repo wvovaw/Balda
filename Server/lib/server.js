@@ -1,4 +1,4 @@
-const connectedUsers = new Set();
+let connectedUsers = new Set();
 let lobbyList = [];
 let lobbyIdCounter = 0;
 ipAddress = '127.0.0.1';
@@ -25,11 +25,6 @@ io.on('connection', (socket) => {
 *       LOGIN STUF
 *
 */
-  socket.on('disconnect', () => {
-    connectedUsers.delete(username);
-    //socket.broadcast.emit('logout', { username, users: Array.from(connectedUsers)});
-    console.log(`User ${username} has disconnected.`);
-  });
   socket.on('user_login', (user_data) => {
       username = JSON.parse(user_data).username;
       if(connectedUsers.has(username)) {
@@ -65,6 +60,7 @@ io.on('connection', (socket) => {
            `;
     for(l of lobbyList) {
       lobbyJson += `{
+        "id" : "${l.id}",
         "title" : "${l.title}",
         "passlen" : "${l.pass.length}",
         "connected" : "${l.playerList.length}",
@@ -77,6 +73,28 @@ io.on('connection', (socket) => {
     }`;
     socket.emit('pull_lobby_list', lobbyJson);
   });
+  socket.on('can_i_join_lobby', (lobbyId, pass) => {
+    for(l of lobbyList) { if(l.id == lobbyId) {
+        if(l.playerList.length != l.maxPlayers && l.pass == pass) {
+          socket.emit('welcome', lobbyId); //Welcome user to join
+        }
+        else socket.emit('no_welcome'); //refusal
+      }
+    }
+  });
+  socket.on('join_lobby', (lobbyId) => {
+    for(l of lobbyList) {
+      if(l.id == lobbyId) {
+        l.addPlayer(username, socket)
+      }
+    }
+  });
+  socket.on('host_join_lobby', (username) => {
+    for(l of lobbyList) { if(l.host == username) {
+      socket.emit('welcome', l.id);
+    }
+  }
+  });
 });
 
 
@@ -88,20 +106,22 @@ class Lobby {
       this.host = hostUser;
       this.maxPlayers = maxPlayers;
 
-      socket.broadcast.emit('new_lobby_created', this.id, this.pass.length, this.title, Number(this.maxPlayers), this.playerList.length);
-      this.addPlayer(hostUser, socket);
+      socket.broadcast.emit('new_lobby_created', this.id, this.title, this.pass.length, this.playerList.length, Number(this.maxPlayers));
       console.log(`Lobby '${this.title}' was succsessfully created by ${this.host}`);
   }
   playerList = Array(); //userName
   maxPlayers = 2;
 
   addPlayer(userName, socket) {
-      if(this.playerList.length < this.maxPlayers) {
-        let player = new Player(userName);
-        this.playerList.push(player);
-        console.log(`Player ${player.playerName} has succsessfuly connected to lobby ${this.title}`);
-        socket.broadcast.emit('newPlayerInlobby', this.id, this.playerList.length);
-      } 
+    if(this.playerList.length < this.maxPlayers) {
+      let player = new Player(userName);
+      this.playerList.push(player);
+      console.log(`Player ${player.playerName} has succsessfuly connected to lobby ${this.title}`);
+      console.log(`Emit about it to all users in lobby ${this.id}`);
+      socket.broadcast.emit('lobbyListChanges', this.id, this.playerList.length);
+      socket.join(this.id);
+      socket.to(this.id).emit('playerConnected', userName);
+    } 
   }
   kickPlayer(userName) {
       var pos = this.playerList.indexOf(userName);

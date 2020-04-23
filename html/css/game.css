@@ -18,6 +18,13 @@ body {
 }
 #left_pane {
     background-color: #282a36;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    padding: 6px;
+}
+#tierlist {
+    border: 1px black solid;
 }
 #right_pane {
     background-color: #282a36;
@@ -112,7 +119,6 @@ body {
     padding: 2px;
     justify-content: space-around;
     background-color: #44475a;
-
 }
 #confirm_word_button {
     padding: 3px;

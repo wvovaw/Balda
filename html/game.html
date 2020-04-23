@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
+    <meta http-equiv="X-Content-Security-Policy" content="script-src 'self' http://localhost:3000 'unsafe-inline' 'unsafe-eval'; ">
     <link rel="stylesheet" href="./css/dark.min.css">
     <link rel="stylesheet" type="text/css" href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
     <link rel="stylesheet" type="text/css" href="./css/game.css">
@@ -18,7 +18,8 @@
         <div class="titlebar_button" id="close_button"></div>
       </div>
       <div id="left_pane">
-      left
+        <ul id="tierlist">
+        </ul>
       </div>
       <div id="gamezone">
         <div id="gamezone_filler"></div>

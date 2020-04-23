@@ -16,15 +16,30 @@ document.getElementById('new_lobby').addEventListener('click', () => {
     });
     create_lobby_win.loadFile('./html/create_lobby.html');
     create_lobby_win.webContents.openDevTools();
+
+    create_lobby_win.on('closed', (e) => {
+        socket.emit('host_join_lobby', username);
+    });
 });
+//Set user profile card
+let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
+let username = userProfile.username;
+document.getElementById('user_profile_username').textContent = username;
 
 let lobby_list = document.getElementById('lobby_list');
+let join_buttons = document.querySelectorAll('.join_button');
 
-function renderLobby(id, passlen, lobby_title, required, connected) {
-    if(passlen == 0 || passlen == undefined) lock_icon = 'fas fa-lock-open';
-    else lock_icon = 'fas fa-lock';
-    
-    lobby_list.innerHTML += `
+function renderLobby(id, lobby_title, passlen, connected, required) {
+    let lock_icon, disable;
+    if(passlen == 0 || passlen == undefined) {
+        lock_icon = 'fas fa-lock-open';
+        disable = 'disabled';
+    } 
+    else {
+        lock_icon = 'fas fa-lock';
+        disable = '';
+    }
+    let newLobbyNode =  `
         <ul class="lobby_block" id="${id}">
             <i id="fa-lock" class="fas ${lock_icon}"></i>
             <div class="lobby_title"> ${lobby_title}</div>
@@ -33,30 +48,49 @@ function renderLobby(id, passlen, lobby_title, required, connected) {
                 <div class="connected">${connected} / </div> 
                 <div class="required">${required}</div>
             </div>
-            <div class="pass_wrap"><input type="password" name="pass_input" id="pass_input"></div>
-            <button class="join_button"><i class="fas fa-sign-in-alt"></i></button>
-        </ul>`
+            <div class="pass_wrap"><input type="password" name="pass_input" id="pass_input" ${disable}></div>
+            <button class="join_button" onclick="addJoinEvent(${id});"><i class="fas fa-sign-in-alt"></i></button>
+        </ul>`;
+    lobby_list.innerHTML += newLobbyNode;
+}
+function addJoinEvent(lobbyId) {
+    console.log('Join to ', lobbyId);
+    //Implement user enter to lobby
+    let pass = document.getElementById(lobbyId).getElementsByClassName('pass_wrap')[0].querySelector('#pass_input').value;
+    socket.emit('can_i_join_lobby', lobbyId, pass);
 }
 
 socket.emit('fetch_lobby_list'); // Asks server to give this client all lobbies
 socket.on('pull_lobby_list', (lobbyJson) => {
     let lobbyJsonToList = JSON.parse(lobbyJson).lobbyList;
     console.log(lobbyJsonToList);
-    console.log(typeof(lobbylobbyJsonToListJson));
-    for(l of lobbyJsonToList) {
-        renderLobby(l.id, l.passlen, l.title, l.required, l.connected);
+    for(const l of lobbyJsonToList) {
+        renderLobby(l.id, l.title, l.passlen, l.connected, l.required);
     }
     console.log(lobbyJson);
 }); //and handle it
 
-socket.on('new_lobby_created', (id, passlen, lobby_title, required, connected) => {
-    renderLobby(id, passlen, lobby_title, required, connected);
+socket.on('new_lobby_created', (id, lobby_title, passlen, connected, required) => {
+    renderLobby(id, lobby_title, passlen, connected, required);
 });
 
-socket.on('newPlayerInlobby', (lobbyId, connected) => {
-    console.log(lobbyId);
-    let lobby = document.getElementById(String(lobbyId));
-    lobby.getElementsByClassName('players_count')[0].getElementsByClassName('connected')[0].textContent = connected + '/';
+socket.on('lobbyListChanges', (lobbyId, connected) => {
+    console.log(`${lobbyId} has changed`);
+    let lobby = document.getElementById(lobbyId);
     console.log(lobby);
+    lobby.getElementsByClassName('players_count')[0].getElementsByClassName('connected')[0].textContent = connected + '/';
 });
 
+socket.on('welcome', (lobbyId) => {
+    connectToLobby(lobbyId);
+});
+function connectToLobby(lobbyId) {
+    let userProfile = fs.readFileSync('./cfg.json');
+    userProfile = userProfile.slice(0, -1);
+    userProfile += `, "lobbyId" : "${lobbyId}"}`;
+    fs.writeFileSync('./cfg.json', userProfile);
+    ipc.send('success_join_lobby', 'arg');
+}
+socket.on('no_welcome', () => {
+    console.log('Lobby is full or you\'ve inputed the wrong password.');
+});

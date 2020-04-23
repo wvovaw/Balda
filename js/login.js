@@ -29,5 +29,6 @@ document.getElementById('enter_button').addEventListener('click', (e) => {
         socket.emit('user_login', `{"username" : "${username}"}`);
         sessionStorage.setItem('username', username);    
         fs.writeFileSync('./cfg.json', `{"username" : "${username}"}`);
+        document.cookie = `username=${username}`;
     }
 });
