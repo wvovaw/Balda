@@ -3,6 +3,7 @@ var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
 
 let username;
+let useravatar = `https://picsum.photos/72/72?random=1`;
 
 socket.on('success_login', () => {
   console.log(`Log-inned as ${username}!`);
@@ -15,6 +16,7 @@ socket.on('wrong_username', () => {
 socket.on('server_message', (data) => {
    console.log(`!SERVER: ${data}`);
 });
+//Add avatar choosing system
 document.getElementById('enter_button').addEventListener('click', (e) => {
     e.preventDefault();
     username = document.getElementById('username').value
@@ -26,9 +28,8 @@ document.getElementById('enter_button').addEventListener('click', (e) => {
         }, 1000);
     }
     else {
-        socket.emit('user_login', `{"username" : "${username}"}`);
-        sessionStorage.setItem('username', username);    
-        fs.writeFileSync('./cfg.json', `{"username" : "${username}"}`);
-        document.cookie = `username=${username}`;
+        let userdata = `{"username" : "${username}", "useravatar" : "${useravatar}"}`;
+        socket.emit('user_login', userdata);
+        fs.writeFileSync('./cfg.json', userdata);
     }
 });

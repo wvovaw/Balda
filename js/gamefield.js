@@ -262,10 +262,31 @@ drawInitWord('ПИДАРАС');
 
   let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
   let username = userProfile.username;
-  let userAvatar = userProfile.userAvatar;
+  let useravatar = userProfile.useravatar;
   let lobbyId = userProfile.lobbyId;
-  socket.emit('join_lobby', lobbyId);
-  socket.on('playerConnected', () => {
-    document.getElementById('tierlist').innerHTML += `<li class="player">${username}</li>`;
+  socket.emit('join_lobby', lobbyId, username, useravatar);
+  socket.on('succsess_lobby_connection', (playerListJson) => {
+    let playerList = JSON.parse(playerListJson).playerList;
+    console.log(playerList);
+    for(const p of playerList) {
+      console.log(p);
+      document.getElementById('tierlist').innerHTML += `
+      <div class="player" id="${p.playerName}">
+        <img class="user_profile_avatar" src="${p.playerAvatar}">
+        <div class="user_profile_username">${p.playerName}</div>
+        <div class="user_profile_userlvl">Очки: ${p.playerPoints}</div>
+        <div class="user_turn_progressbar"></div>
+      </div>`;
+    }
+  });
+  socket.on('playerConnected', (playerName, playerAvatar, playerPoints) => {
+    console.log(`New player: ${playerName} ${playerAvatar} ${playerPoints}`);
+    document.getElementById('tierlist').innerHTML += `
+      <div class="player" id="${playerName}">
+        <img class="user_profile_avatar" src="${playerAvatar}">
+        <div class="user_profile_username">${playerName}</div>
+        <div class="user_profile_userlvl">Очки: ${playerPoints}</div>
+        <div class="user_turn_progressbar"></div>
+      </div>`;
   });
 }

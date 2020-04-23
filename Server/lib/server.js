@@ -1,4 +1,5 @@
-let connectedUsers = new Set();
+let connectedUsersNames = new Set();
+let userList = new Set();
 let lobbyList = [];
 let lobbyIdCounter = 0;
 ipAddress = '127.0.0.1';
@@ -20,6 +21,7 @@ exports.server = {
 
 io.on('connection', (socket) => {
   let username;
+  let useravatar;
   socket.emit('server_message', 'Hello, my sweet clients! I love you so much.');
 /*
 *       LOGIN STUF
@@ -27,12 +29,15 @@ io.on('connection', (socket) => {
 */
   socket.on('user_login', (user_data) => {
       username = JSON.parse(user_data).username;
-      if(connectedUsers.has(username)) {
+      useravatar = JSON.parse(user_data).useravatar;
+      if(connectedUsersNames.has(username)) {
           console.log(`Username ${username} is already connected.`);
           socket.emit('wrong_username');
           return;
       }
-      connectedUsers.add(username);
+      connectedUsersNames.add(username);
+      let newUser = new User(username, useravatar);
+      userList.add(newUser);
       socket.emit('success_login');
       console.log(`User ${username} has successfully connected.`);
   });
@@ -82,18 +87,25 @@ io.on('connection', (socket) => {
       }
     }
   });
-  socket.on('join_lobby', (lobbyId) => {
+  socket.on('join_lobby', (lobbyId, username, useravatar) => {
     for(l of lobbyList) {
       if(l.id == lobbyId) {
-        l.addPlayer(username, socket)
+        l.addPlayer(username, useravatar, socket);
+        let playerListJson = `{ "playerList" : [`;
+        for(p of l.playerList) {
+          playerListJson += `{"playerName" : "${p.playerName}", "playerAvatar" : "${p.playerAvatar}", "playerPoints" : "${p.getPoints()}"},`;
+        }
+        playerListJson = playerListJson.slice(0, -1);
+        playerListJson += `]}`;
+        socket.emit('succsess_lobby_connection', playerListJson);
       }
     }
   });
   socket.on('host_join_lobby', (username) => {
     for(l of lobbyList) { if(l.host == username) {
       socket.emit('welcome', l.id);
+      }
     }
-  }
   });
 });
 
@@ -109,18 +121,18 @@ class Lobby {
       socket.broadcast.emit('new_lobby_created', this.id, this.title, this.pass.length, this.playerList.length, Number(this.maxPlayers));
       console.log(`Lobby '${this.title}' was succsessfully created by ${this.host}`);
   }
-  playerList = Array(); //userName
+  playerList = []; //userName
   maxPlayers = 2;
 
-  addPlayer(userName, socket) {
+  addPlayer(userName, userAvatar, socket) {
     if(this.playerList.length < this.maxPlayers) {
-      let player = new Player(userName);
+      let player = new Player(userName, userAvatar);
       this.playerList.push(player);
       console.log(`Player ${player.playerName} has succsessfuly connected to lobby ${this.title}`);
       console.log(`Emit about it to all users in lobby ${this.id}`);
       socket.broadcast.emit('lobbyListChanges', this.id, this.playerList.length);
       socket.join(this.id);
-      socket.to(this.id).emit('playerConnected', userName);
+      socket.to(this.id).emit('playerConnected', player.playerName, player.playerAvatar, player.getPoints());
     } 
   }
   kickPlayer(userName) {
@@ -147,12 +159,17 @@ class User {
   }
 }
 class Player {
-  constructor(userName) {
+  constructor(userName, userAvatar) {
       this.playerName = userName;
+      this.playerAvatar = userAvatar;
   }
   #points = 0;
   addPoints(points) {
       this.#points += points;
   }
+  getPoints() {
+    return this.#points;
+  }
 }
+
 

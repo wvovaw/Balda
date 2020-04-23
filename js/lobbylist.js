@@ -24,7 +24,9 @@ document.getElementById('new_lobby').addEventListener('click', () => {
 //Set user profile card
 let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
 let username = userProfile.username;
+let useravatar = userProfile.useravatar;
 document.getElementById('user_profile_username').textContent = username;
+document.getElementById('user_profile_avatar').src = useravatar;
 
 let lobby_list = document.getElementById('lobby_list');
 let join_buttons = document.querySelectorAll('.join_button');
@@ -55,10 +57,22 @@ function renderLobby(id, lobby_title, passlen, connected, required) {
 }
 function addJoinEvent(lobbyId) {
     console.log('Join to ', lobbyId);
-    //Implement user enter to lobby
     let pass = document.getElementById(lobbyId).getElementsByClassName('pass_wrap')[0].querySelector('#pass_input').value;
     socket.emit('can_i_join_lobby', lobbyId, pass);
 }
+socket.on('welcome', (lobbyId) => {
+    connectToLobby(lobbyId);
+});
+function connectToLobby(lobbyId) {
+    let userProfile = fs.readFileSync('./cfg.json');
+    userProfile = userProfile.slice(0, -1);
+    userProfile += `, "lobbyId" : "${lobbyId}"}`;
+    fs.writeFileSync('./cfg.json', userProfile);
+    ipc.send('success_join_lobby', 'arg');
+}
+socket.on('no_welcome', () => {
+    console.log('Lobby is full or you\'ve inputed the wrong password.');
+});
 
 socket.emit('fetch_lobby_list'); // Asks server to give this client all lobbies
 socket.on('pull_lobby_list', (lobbyJson) => {
@@ -79,18 +93,4 @@ socket.on('lobbyListChanges', (lobbyId, connected) => {
     let lobby = document.getElementById(lobbyId);
     console.log(lobby);
     lobby.getElementsByClassName('players_count')[0].getElementsByClassName('connected')[0].textContent = connected + '/';
-});
-
-socket.on('welcome', (lobbyId) => {
-    connectToLobby(lobbyId);
-});
-function connectToLobby(lobbyId) {
-    let userProfile = fs.readFileSync('./cfg.json');
-    userProfile = userProfile.slice(0, -1);
-    userProfile += `, "lobbyId" : "${lobbyId}"}`;
-    fs.writeFileSync('./cfg.json', userProfile);
-    ipc.send('success_join_lobby', 'arg');
-}
-socket.on('no_welcome', () => {
-    console.log('Lobby is full or you\'ve inputed the wrong password.');
 });

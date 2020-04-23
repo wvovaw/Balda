@@ -23,7 +23,10 @@ app.whenReady().then(createWindow);
 const {ipcMain} = require('electron');
 ipcMain.on('success_login', (event, arg) => {
   mainWindow.loadFile('./html/lobbylist.html');
-  });
+});
+ipcMain.on('success_join_lobby', (event, arg) => {
+  mainWindow.loadFile('./html/game.html');
+});
 
 app.on('window-all-closed', function () {
   // On macOS it is common for applications and their menu bar
