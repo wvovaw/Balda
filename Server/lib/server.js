@@ -107,6 +107,14 @@ io.on('connection', (socket) => {
       }
     }
   });
+  socket.on('player_leave_lobby', (playerName, lobbyId) => {
+    for(l of lobbyList) {
+      if(l.lobbyId == lobbyId) {
+        l.kickPlayer(playerName, socket);
+        return;
+      }
+    }
+  });
 });
 
 
@@ -130,19 +138,31 @@ class Lobby {
       this.playerList.push(player);
       console.log(`Player ${player.playerName} has succsessfuly connected to lobby ${this.title}`);
       console.log(`Emit about it to all users in lobby ${this.id}`);
-      socket.broadcast.emit('lobbyListChanges', this.id, this.playerList.length);
+      socket.broadcast.emit('lobbyListChanges');
       socket.join(this.id);
       socket.to(this.id).emit('playerConnected', player.playerName, player.playerAvatar, player.getPoints());
     } 
   }
-  kickPlayer(userName) {
-      var pos = this.playerList.indexOf(userName);
-      if(pos > -1) {
-          var removedPlayer = playerList[pos].userName;
-          this.playerList.splice(pos, 1);
-          console.log(`Player ${removedPlayer} has disconnected from the '${this.title}'`);
-      } 
-  }
+  kickPlayer(playerName, socket) {
+    for(p of this.playerList) {
+      if(p.playerName == playerName) {
+        this.playerList.splice(p, 1);
+        console.log(`Player ${playerName} has disconnected from the '${this.title}'`);
+        socket.to(this.id).emit('playerDisconnected', playerName);
+        if(this.playerList.length == 0) {
+          for(l of lobbyList) {
+            if(l == this) {
+              lobbyList.splice(l, 1);
+            }
+          }
+        }
+        socket.broadcast.emit('lobbyListChanges');
+        return;
+      }
+    }
+    console.log('ERROR! This user wasn\'t found in the lobby');
+  } 
+  
   startGame() {
      //Send start game signal to all clients from the playerList
      //there is gonna be an implementation of the game cycle (player 1, 2, 3, 4, 5) untill the gamefield isn't filled

@@ -9,7 +9,7 @@ function createWindow () {
     width: 980,
     height: 700,
     frame: false,
-    resizable: true,
+    resizable: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
@@ -26,6 +26,9 @@ ipcMain.on('success_login', (event, arg) => {
 });
 ipcMain.on('success_join_lobby', (event, arg) => {
   mainWindow.loadFile('./html/game.html');
+});
+ipcMain.on('to_lobbyList', (event, arg) => {
+  mainWindow.loadFile('./html/lobbylist.html');
 });
 
 app.on('window-all-closed', function () {

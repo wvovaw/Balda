@@ -32,14 +32,17 @@ let lobby_list = document.getElementById('lobby_list');
 let join_buttons = document.querySelectorAll('.join_button');
 
 function renderLobby(id, lobby_title, passlen, connected, required) {
-    let lock_icon, disable;
+    let lock_icon, disablePass, disableJoin, buttonIcon = '<i class="fas fa-sign-in-alt"></i> ';
     if(passlen == 0 || passlen == undefined) {
         lock_icon = 'fas fa-lock-open';
-        disable = 'disabled';
+        disablePass = 'disabled';
     } 
     else {
-        lock_icon = 'fas fa-lock';
-        disable = '';
+        disablePass = '';
+    }
+    if(connected == required) { 
+        disableJoin = 'disabled';
+        buttonIcon = '<i class="fas fa-door-closed"></i>'; 
     }
     let newLobbyNode =  `
         <ul class="lobby_block" id="${id}">
@@ -50,10 +53,11 @@ function renderLobby(id, lobby_title, passlen, connected, required) {
                 <div class="connected">${connected} / </div> 
                 <div class="required">${required}</div>
             </div>
-            <div class="pass_wrap"><input type="password" name="pass_input" id="pass_input" ${disable}></div>
-            <button class="join_button" onclick="addJoinEvent(${id});"><i class="fas fa-sign-in-alt"></i></button>
+            <div class="pass_wrap"><input type="password" name="pass_input" id="pass_input" ${disablePass}></div>
+            <button class="join_button" onclick="addJoinEvent(${id});" ${disableJoin}>${buttonIcon}</button>
         </ul>`;
     lobby_list.innerHTML += newLobbyNode;
+    if(connected == required) document.getElementById(id).className += ' closed_lobby';
 }
 function addJoinEvent(lobbyId) {
     console.log('Join to ', lobbyId);
@@ -77,7 +81,7 @@ socket.on('no_welcome', () => {
 socket.emit('fetch_lobby_list'); // Asks server to give this client all lobbies
 socket.on('pull_lobby_list', (lobbyJson) => {
     let lobbyJsonToList = JSON.parse(lobbyJson).lobbyList;
-    console.log(lobbyJsonToList);
+    //console.log(lobbyJsonToList);
     for(const l of lobbyJsonToList) {
         renderLobby(l.id, l.title, l.passlen, l.connected, l.required);
     }
@@ -88,9 +92,7 @@ socket.on('new_lobby_created', (id, lobby_title, passlen, connected, required) =
     renderLobby(id, lobby_title, passlen, connected, required);
 });
 
-socket.on('lobbyListChanges', (lobbyId, connected) => {
-    console.log(`${lobbyId} has changed`);
-    let lobby = document.getElementById(lobbyId);
-    console.log(lobby);
-    lobby.getElementsByClassName('players_count')[0].getElementsByClassName('connected')[0].textContent = connected + '/';
+socket.on('lobbyListChanges', () => {
+    lobby_list.innerHTML = '';
+    socket.emit('fetch_lobby_list');
 });

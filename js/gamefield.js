@@ -177,6 +177,14 @@ drawInitWord('ПИДАРАС');
     document.getElementById('remove_word_button').style.pointerEvents = 'none';
     document.getElementById('confirm_word_button').style.pointerEvents = 'none';
   }
+  //Exit lobby event
+  document.getElementById('exit_button').addEventListener('click', () => {
+    socket.emit('player_leave_lobby', username);
+    let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
+    delete delLobbyFromJson.lobbyId;
+    fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
+    ipc.send('to_lobbyList', 'args');
+  });
   /* Word assembling:
   1) Set a letter 
   2) click on the 1-st letter of the needed word
@@ -280,7 +288,7 @@ drawInitWord('ПИДАРАС');
     }
   });
   socket.on('playerConnected', (playerName, playerAvatar, playerPoints) => {
-    console.log(`New player: ${playerName} ${playerAvatar} ${playerPoints}`);
+    console.log(`New player connected: ${playerName}.`);
     document.getElementById('tierlist').innerHTML += `
       <div class="player" id="${playerName}">
         <img class="user_profile_avatar" src="${playerAvatar}">
@@ -288,5 +296,9 @@ drawInitWord('ПИДАРАС');
         <div class="user_profile_userlvl">Очки: ${playerPoints}</div>
         <div class="user_turn_progressbar"></div>
       </div>`;
+  });
+  socket.on('playerDisconnected', (playerName) => {
+    console.log(`Player ${playerName} has disconnected.`);
+    document.getElementById(playerName).remove();
   });
 }

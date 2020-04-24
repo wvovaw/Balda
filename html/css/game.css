@@ -20,7 +20,7 @@ body {
     background-color: #282a36;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 15fr 1fr;
     padding: 6px;
 }
 #tierlist {

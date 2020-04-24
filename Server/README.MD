@@ -6,8 +6,8 @@
 ### Lobby part
 - [X] Create lobby on user's demand.
 - [X] Connect user to the lobby.
-- [ ] Disconnect user from the lobby.
-- [ ] Remove the lobby when nobody is connected to it (host leave) or after end of the game.
+- [X] Disconnect user from the lobby.
+- [X] Remove the lobby when nobody is connected to it (host leave) or after end of the game.
 - [ ] Start the game when all players are ready. Build a circuled queue.
 ### In game part 
 - [ ] Toggle round. The round ends after the time is up or the player has finished the move
