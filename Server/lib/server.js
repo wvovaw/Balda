@@ -22,7 +22,6 @@ exports.server = {
 io.on('connection', (socket) => {
   let username;
   let useravatar;
-  socket.emit('server_message', 'Hello, my sweet clients! I love you so much.');
 /*
 *       LOGIN STUF
 *
@@ -58,7 +57,7 @@ io.on('connection', (socket) => {
     lobbyList.push(newLobby);
   });
   socket.on('fetch_lobby_list', () => {
-    //Create json file with all lobbies 
+    //Create json with all lobbies 
     let lobbyJson = `{
       "lobbyList":
          [
@@ -108,10 +107,18 @@ io.on('connection', (socket) => {
     }
   });
   socket.on('player_leave_lobby', (playerName, lobbyId) => {
+    console.log(`Kicking ${playerName}`);
     for(l of lobbyList) {
-      if(l.lobbyId == lobbyId) {
+      if(l.id == lobbyId) {
         l.kickPlayer(playerName, socket);
         return;
+      }
+    }
+  });
+  socket.on('start_game', (lobbyId, socket) => {
+    for(l of lobbyList) {
+      if(l.id == lobbyId) {
+        l.startGame(io, socket);
       }
     }
   });
@@ -131,17 +138,17 @@ class Lobby {
   }
   playerList = []; //userName
   maxPlayers = 2;
+  initWord = 'ПАРОХОД';
 
   addPlayer(userName, userAvatar, socket) {
     if(this.playerList.length < this.maxPlayers) {
       let player = new Player(userName, userAvatar);
       this.playerList.push(player);
       console.log(`Player ${player.playerName} has succsessfuly connected to lobby ${this.title}`);
-      console.log(`Emit about it to all users in lobby ${this.id}`);
       socket.broadcast.emit('lobbyListChanges');
       socket.join(this.id);
       socket.to(this.id).emit('playerConnected', player.playerName, player.playerAvatar, player.getPoints());
-    } 
+    }
   }
   kickPlayer(playerName, socket) {
     for(p of this.playerList) {
@@ -149,7 +156,8 @@ class Lobby {
         this.playerList.splice(p, 1);
         console.log(`Player ${playerName} has disconnected from the '${this.title}'`);
         socket.to(this.id).emit('playerDisconnected', playerName);
-        if(this.playerList.length == 0) {
+        if(this.playerList.length < 1) {
+          console.log(`Lobby ${this.id} is empty. deleting`);
           for(l of lobbyList) {
             if(l == this) {
               lobbyList.splice(l, 1);
@@ -163,8 +171,10 @@ class Lobby {
     console.log('ERROR! This user wasn\'t found in the lobby');
   } 
   
-  startGame() {
+  startGame(io, socket) {
      //Send start game signal to all clients from the playerList
+     io.to(this.id).emit('game_started', this.initWord);
+     //io.to(socket).emit('init_word_to_the_last_player', this.initWord);
      //there is gonna be an implementation of the game cycle (player 1, 2, 3, 4, 5) untill the gamefield isn't filled
      
   }

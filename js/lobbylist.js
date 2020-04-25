@@ -65,12 +65,13 @@ function addJoinEvent(lobbyId) {
     socket.emit('can_i_join_lobby', lobbyId, pass);
 }
 socket.on('welcome', (lobbyId) => {
-    connectToLobby(lobbyId);
+    let required = document.getElementById(lobbyId).getElementsByClassName('players_count')[0].querySelector('.required').textContent;
+    connectToLobby(lobbyId, required);
 });
-function connectToLobby(lobbyId) {
+function connectToLobby(lobbyId, required) {
     let userProfile = fs.readFileSync('./cfg.json');
     userProfile = userProfile.slice(0, -1);
-    userProfile += `, "lobbyId" : "${lobbyId}"}`;
+    userProfile += `, "lobbyId" : "${lobbyId}", "required" : "${required}"}`;
     fs.writeFileSync('./cfg.json', userProfile);
     ipc.send('success_join_lobby', 'arg');
 }

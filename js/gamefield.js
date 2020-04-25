@@ -86,8 +86,6 @@ window.onload = function() {
     gamezone.children[28].innerHTML = word[6];
     gamezone.children[28].className = 'letterblock filled';
 }
-drawInitWord('ПИДАРАС');
-
  //drag'n'drop
   /*
   1) Drug a letter up
@@ -179,12 +177,15 @@ drawInitWord('ПИДАРАС');
   }
   //Exit lobby event
   document.getElementById('exit_button').addEventListener('click', () => {
-    socket.emit('player_leave_lobby', username);
+    socket.emit('player_leave_lobby', username, lobbyId);
     let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
     delete delLobbyFromJson.lobbyId;
     fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
     ipc.send('to_lobbyList', 'args');
   });
+  document.getElementById('close_button').addEventListener('click', () => {
+    socket.emit('player_leave_lobby', username, lobbyId);
+  }); 
   /* Word assembling:
   1) Set a letter 
   2) click on the 1-st letter of the needed word
@@ -272,10 +273,11 @@ drawInitWord('ПИДАРАС');
   let username = userProfile.username;
   let useravatar = userProfile.useravatar;
   let lobbyId = userProfile.lobbyId;
+  let requiredPlayers = Number(userProfile.required);
+  let playerList;
   socket.emit('join_lobby', lobbyId, username, useravatar);
   socket.on('succsess_lobby_connection', (playerListJson) => {
-    let playerList = JSON.parse(playerListJson).playerList;
-    console.log(playerList);
+    playerList = JSON.parse(playerListJson).playerList;
     for(const p of playerList) {
       console.log(p);
       document.getElementById('tierlist').innerHTML += `
@@ -285,6 +287,10 @@ drawInitWord('ПИДАРАС');
         <div class="user_profile_userlvl">Очки: ${p.playerPoints}</div>
         <div class="user_turn_progressbar"></div>
       </div>`;
+    }
+    if(document.querySelectorAll('.player').length == requiredPlayers) {
+      socket.emit('start_game', lobbyId);
+      console.log('I start the game at', lobbyId);
     }
   });
   socket.on('playerConnected', (playerName, playerAvatar, playerPoints) => {
@@ -301,4 +307,12 @@ drawInitWord('ПИДАРАС');
     console.log(`Player ${playerName} has disconnected.`);
     document.getElementById(playerName).remove();
   });
+  socket.on('game_started', (initWord) => {
+    console.log(`Game has started. Init word is ${initWord}`);
+    drawInitWord(initWord);
+  });
+  // socket.on('init_word_to_the_last_player', (initWord) => {
+  //   console.log('I\'ve recieved the initword, thank you.');
+  //   drawInitWord(initWord);
+  // });
 }
