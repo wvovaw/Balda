@@ -15,8 +15,6 @@ document.getElementById('new_lobby').addEventListener('click', () => {
         }
     });
     create_lobby_win.loadFile('./html/create_lobby.html');
-    create_lobby_win.webContents.openDevTools();
-
     create_lobby_win.on('closed', (e) => {
         socket.emit('host_join_lobby', username);
     });

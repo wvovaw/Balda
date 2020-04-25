@@ -5,7 +5,7 @@ var fs = require('fs');
 window.onload = function() {
   //Game field (All the letters is empty at the begining)
   for (var i = 0; i < 49; i++) {
-    document.getElementById('gamezone').innerHTML += '<div id="' + i + '" class="empty letterblock"></div>';    
+    document.getElementById('gamezone').innerHTML += '<div id="' + i + '" class="letterblock empty"></div>';    
   }
   //Adjacency list
   var adjacencyList = [
@@ -68,24 +68,14 @@ window.onload = function() {
   for (var i = 0; i < gameLanguage.length; i++) {
     document.getElementById('keyboard').innerHTML += '<div class="letter" draggable="true">' + gameLanguage[i] + '</div>';    
   }
-
+ 
+  let gamezone = document.getElementById('gamezone');
   function drawInitWord(word) {
-    var gamezone = document.getElementById('gamezone');
-    gamezone.children[22].innerHTML = word[0];
-    gamezone.children[22].className = 'letterblock filled';
-    gamezone.children[23].innerHTML = word[1];
-    gamezone.children[23].className = 'letterblock filled';
-    gamezone.children[24].innerHTML = word[2];
-    gamezone.children[24].className = 'letterblock filled';
-    gamezone.children[25].innerHTML = word[3];
-    gamezone.children[25].className = 'letterblock filled';
-    gamezone.children[26].innerHTML = word[4];
-    gamezone.children[26].className = 'letterblock filled';
-    gamezone.children[27].innerHTML = word[5];
-    gamezone.children[27].className = 'letterblock filled';
-    gamezone.children[28].innerHTML = word[6];
-    gamezone.children[28].className = 'letterblock filled';
-}
+    let j=0;
+    for(var i = 21; i < 28; i++) {
+      placeLetter(word[j++], i);
+     }
+  }
  //drag'n'drop
   /*
   1) Drug a letter up
@@ -102,6 +92,11 @@ window.onload = function() {
   let filleds = document.querySelectorAll('.filled');
   let letterText;  //variable of a choosed letter
 
+  //Block the keyboard till the next client's turn
+  for(const letter of letters) {
+    letter.style.pointerEvents = 'none';
+    letter.style.backgroundColor = '#606060';
+  }
   //Events for letters
   for(const letter of letters) {
     letter.addEventListener('dragstart', dragStart);
@@ -143,10 +138,8 @@ window.onload = function() {
     this.addEventListener('click', markLetter);
     //Rebuild filleds
     filleds = document.querySelectorAll('.filled');
-
     console.log(filleds);
     //Unlock word assembly
-    
     document.getElementById('remove_letter_button').style.pointerEvents = 'auto';
   }
   //Remove letter event
@@ -154,7 +147,7 @@ window.onload = function() {
     if(wordStack.length > 0) removeWord();
     letterToRemove = document.querySelector('.lastFilled');
     letterToRemove.innerHTML = '';
-    letterToRemove.className = 'empty letterblock';
+    letterToRemove.className = 'letterblock empty';
     for(const letter of letters) {
       letter.style.pointerEvents = 'auto';
       letter.style.backgroundColor = '#909090';
@@ -228,6 +221,8 @@ window.onload = function() {
   }
   // Confirm button
   let completeWord = ''; 
+  let letterCoord;
+  let letter;
   document.getElementById('confirm_word_button').addEventListener('click', () => {
     //Rebuild empties
     empties = document.querySelectorAll('.empty');
@@ -242,18 +237,22 @@ window.onload = function() {
       }
       else letterblock.className = 'letterblock filled';
       completeWord += letterblock.innerHTML;
+      letterCoord = document.querySelector('.lastFilled').id;
+      letter = document.querySelector('.lastFilled').innerHTML;
+      //Block the keyboard till the next client's turn
+      for(const letter of letters) {
+        letter.style.pointerEvents = 'none';
+        letter.style.backgroundColor = '#606060';
+      }
     }
-    for(var i = 0; i < 22; i++) {
-      document.getElementById('used_words').innerHTML += '<div class="used_word">' + completeWord + '</div>';
-    }
+    addUsedWord(completeWord);
     for(letterblock of wordStack) {
       letterblock.className = 'letterblock filled';
     }
-    wordStack = Array();
     document.getElementById('remove_letter_button').style.pointerEvents = 'none';
     document.getElementById('remove_word_button').style.pointerEvents = 'none';
     document.getElementById('confirm_word_button').style.pointerEvents = 'none';
-    newTurn();
+    socket.emit('i_end_turn', lobbyId, completeWord, username, letter, letterCoord);
   });
   function newTurn() {
     //Unlock the keyboard
@@ -261,10 +260,10 @@ window.onload = function() {
       letter.style.pointerEvents = 'auto';
       letter.style.backgroundColor = '#909090';
     }
-    //clear wordStack
     wordStack = Array();
-    //Clear word
     completeWord = '';
+    letterCoord = '';
+    letter = '';
   }
 
 //Socket work
@@ -275,7 +274,9 @@ window.onload = function() {
   let lobbyId = userProfile.lobbyId;
   let requiredPlayers = Number(userProfile.required);
   let playerList;
-  socket.emit('join_lobby', lobbyId, username, useravatar);
+  this.setTimeout(() => {
+    socket.emit('join_lobby', lobbyId, username, useravatar);
+  }, 300);
   socket.on('succsess_lobby_connection', (playerListJson) => {
     playerList = JSON.parse(playerListJson).playerList;
     for(const p of playerList) {
@@ -290,7 +291,7 @@ window.onload = function() {
     }
     if(document.querySelectorAll('.player').length == requiredPlayers) {
       socket.emit('start_game', lobbyId);
-      console.log('I start the game at', lobbyId);
+      console.log('I start the game at ', lobbyId);
     }
   });
   socket.on('playerConnected', (playerName, playerAvatar, playerPoints) => {
@@ -309,10 +310,43 @@ window.onload = function() {
   });
   socket.on('game_started', (initWord) => {
     console.log(`Game has started. Init word is ${initWord}`);
-    drawInitWord(initWord);
+    setTimeout(() => {
+      drawInitWord(initWord);
+    }, 100);
   });
-  // socket.on('init_word_to_the_last_player', (initWord) => {
-  //   console.log('I\'ve recieved the initword, thank you.');
-  //   drawInitWord(initWord);
-  // });
+  socket.on('now_turns', (playerName) => {
+    let prev = document.querySelector('.nowTurns');
+    if(prev !== null && prev !== undefined) {
+      prev.className = 'player';
+    }
+    document.getElementById(playerName).className += ' nowTurns';
+    if(username == playerName) {
+      console.log('THIS IS MY TURN NOW!');
+      newTurn();
+    }
+  });
+  socket.on('board_changes', (usedWord, playerName, letter, letterCoord) => {
+    placeLetter(letter, letterCoord);
+    addUsedWord(usedWord, playerName);
+  });
+  socket.on('end_game', (winnerName) => {
+    console.log(`Game over. ${winnerName} has won! Congrats!`);
+    
+  });
+  function placeLetter(letter, letterCoord) {
+    let l = document.getElementById(String(letterCoord));
+    l.innerHTML = letter;
+    l.className = 'letterblock filled';
+    l.removeEventListener('dragover', dragOver);
+    l.removeEventListener('dragenter', dragEnter);
+    l.removeEventListener('dragleave', dragLeave);
+    l.removeEventListener('drop', dragDrop);
+    l.addEventListener('click', markLetter);
+    //Rebuild empties and filleds
+    empties = document.querySelectorAll('.empty');
+    filleds = document.querySelectorAll('.filled');
+  }
+  function addUsedWord(word, owner) {
+    document.getElementById('used_words').innerHTML += `<li class="used_word" owner="${owner}">${word}</li>`;
+  }
 }

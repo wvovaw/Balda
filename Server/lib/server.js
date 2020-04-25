@@ -122,27 +122,41 @@ io.on('connection', (socket) => {
       }
     }
   });
+  socket.on('i_end_turn', (lobbyId, usedWord, playerName, letter, letterCoord) => {
+    socket.to(lobbyId).emit('board_changes', usedWord, playerName, letter, letterCoord);
+    for(l of lobbyList) {
+      if(l.id == lobbyId) {
+        for(p of l.playerList) { if(p.playerName == playerName) p.points += usedWord.length;}
+        l.nextTurn(io);
+      }
+    }
+  });
 });
 
 
 class Lobby {
   constructor(socket, title, id, pass, hostUser, maxPlayers) {
-      this.title = title;
-      this.id = id;
-      this.pass = pass;
-      this.host = hostUser;
-      this.maxPlayers = maxPlayers;
-
-      socket.broadcast.emit('new_lobby_created', this.id, this.title, this.pass.length, this.playerList.length, Number(this.maxPlayers));
-      console.log(`Lobby '${this.title}' was succsessfully created by ${this.host}`);
+    this.title = title;
+    this.id = id;
+    this.pass = pass;
+    this.host = hostUser;
+    this.maxPlayers = maxPlayers;
+    this.nowTurnPlayer;
+    this.filledLetters = 7;
+    if(maxPlayers > 3) {
+      this.endOfTheGameTurn = 41;
+    }
+    else this.endOfTheGameTurn = 43;
+    this.turnCounter = 0;
+    socket.broadcast.emit('new_lobby_created', this.id, this.title, this.pass.length, this.playerList.length, Number(this.maxPlayers));
+    console.log(`Lobby '${this.title}' was succsessfully created by ${this.host}`);
   }
   playerList = []; //userName
-  maxPlayers = 2;
   initWord = 'ПАРОХОД';
 
   addPlayer(userName, userAvatar, socket) {
     if(this.playerList.length < this.maxPlayers) {
-      let player = new Player(userName, userAvatar);
+      let player = new Player(userName, userAvatar, socket);
       this.playerList.push(player);
       console.log(`Player ${player.playerName} has succsessfuly connected to lobby ${this.title}`);
       socket.broadcast.emit('lobbyListChanges');
@@ -171,15 +185,32 @@ class Lobby {
     console.log('ERROR! This user wasn\'t found in the lobby');
   } 
   
-  startGame(io, socket) {
-     //Send start game signal to all clients from the playerList
-     io.to(this.id).emit('game_started', this.initWord);
-     //io.to(socket).emit('init_word_to_the_last_player', this.initWord);
-     //there is gonna be an implementation of the game cycle (player 1, 2, 3, 4, 5) untill the gamefield isn't filled
-     
+  startGame(io) { 
+    //Send start game signal to all clients from the playerList
+    io.to(this.id).emit('game_started', this.initWord);
+    this.nowTurnPlayer = 0; //Or shuffle playerlist before
+    this.turnCounter++;
+    io.to(this.id).emit('now_turns', this.playerList[this.nowTurnPlayer].playerName);
   }
-  endGame() {
-      //End game signal to trigger end-game window 
+  nextTurn(io) {
+    if(this.turnCounter != this.endOfTheGameTurn) {
+      if(this.nowTurnPlayer == this.maxPlayers - 1)
+        this.nowTurnPlayer = 0;
+      else this.nowTurnPlayer = this.nowTurnPlayer + 1;
+      this.turnCounter++;
+      io.to(this.id).emit('now_turns', this.playerList[this.nowTurnPlayer].playerName);
+    }
+    else this.endGame(io);
+  }
+  endGame(io) {
+    //End game signal to trigger end-game window 
+    let winner = this.playerList[0];
+    for(p of this.playerList) {
+      if(p.points > winner.points) winner = p;
+      else continue;
+    }
+    io.to(this.id).emit('end_game', winner.playerName);
+    console.log(`Winner at lobby "${this.title}": ${winner.playerName}!`);
   }
 }
 class User {
@@ -189,9 +220,10 @@ class User {
   }
 }
 class Player {
-  constructor(userName, userAvatar) {
+  constructor(userName, userAvatar, socket) {
       this.playerName = userName;
       this.playerAvatar = userAvatar;
+      this.socket = socket;
   }
   #points = 0;
   addPoints(points) {
