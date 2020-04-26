@@ -20,7 +20,7 @@
       <div id="left_pane">
         <div id="tierlist">
         </div>
-        <button class="rp_button" id="exit_button">Выйти</button>
+        <button class="rp_button exit_button">Выйти</button>
       </div>
       <div id="gamezone">
         <div id="gamezone_filler"></div>
@@ -37,7 +37,16 @@
       </div>
       <div id="bot_pane">
         bottom
-      </div>  
+      </div>
+      <!--There is the end game modal 'window'--> 
+      <div id="bg_endgame">
+        <div id="endgame">
+          <p id="winner_sign">WINNER!</p>
+          <i id="winner_avatar" class="fas fa-user-circle"></i>
+          <b><p id="winner_name">none</p></b>
+          <button class="exit_button" id="endgame_exit_button">Выйти</button>
+        </div>
+      </div>
     </div>
     <!-- Gamefield script -->
     <script src="../Server/lib/socket.io.js"></script>

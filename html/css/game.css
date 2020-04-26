@@ -181,6 +181,40 @@ body {
 }
 /* Game over popup */
 
-.bg_modal { 
-    
+#bg_endgame { 
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 26px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+#endgame {
+    width: 400px;
+    height: 250px;
+    background-color: #44475a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+}
+#winner_sign {
+    font-size: 25px;
+    margin: 0px 0px 10px 0px;   
+}
+#winner_avatar {
+    font-size: 100px;
+}
+#winner_name {
+    font-size: 15px;
+    margin: 2px 0px 15px 0px;
+    color: #50fa7b;
+}
+#endgame_exit_button {
+    height: 33px;
+    margin: 0px 0px 0px 0px;   
+
 }

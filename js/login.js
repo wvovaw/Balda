@@ -19,12 +19,23 @@ socket.on('server_message', (data) => {
 //Add avatar choosing system
 document.getElementById('enter_button').addEventListener('click', (e) => {
     e.preventDefault();
-    username = document.getElementById('username').value
+    let un = document.getElementById('username');
+    username = un.value;
     if(username.length == 0 || username.length == undefined) {
-        document.getElementById('username').id = "wrong_username";
+        un.id = "wrong_username";
         document.getElementById('wrong_username').focus();
         setTimeout(() => {
             document.getElementById('wrong_username').id = "username";
+        }, 1000);
+    }
+    else if(username.length > 14) {
+        un.id = "wrong_username";
+        un.value = '';
+        un.setAttribute('placeholder', 'Уложитесь в 14 символов)');
+        document.getElementById('wrong_username').focus();
+        setTimeout(() => {
+            document.getElementById('wrong_username').id = "username";
+            un.setAttribute('placeholder', '');
         }, 1000);
     }
     else {

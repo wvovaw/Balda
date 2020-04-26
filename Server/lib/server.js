@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
     socket.to(lobbyId).emit('board_changes', usedWord, playerName, letter, letterCoord);
     for(l of lobbyList) {
       if(l.id == lobbyId) {
-        for(p of l.playerList) { if(p.playerName == playerName) p.points += usedWord.length;}
+        for(p of l.playerList) { if(p.playerName == playerName) p.addPoints(usedWord.length);}
         l.nextTurn(io);
       }
     }
@@ -144,9 +144,9 @@ class Lobby {
     this.nowTurnPlayer;
     this.filledLetters = 7;
     if(maxPlayers > 3) {
-      this.endOfTheGameTurn = 41;
+      this.endOfTheGameTurn = 42;
     }
-    else this.endOfTheGameTurn = 43;
+    else this.endOfTheGameTurn = 2;
     this.turnCounter = 0;
     socket.broadcast.emit('new_lobby_created', this.id, this.title, this.pass.length, this.playerList.length, Number(this.maxPlayers));
     console.log(`Lobby '${this.title}' was succsessfully created by ${this.host}`);
@@ -206,11 +206,11 @@ class Lobby {
     //End game signal to trigger end-game window 
     let winner = this.playerList[0];
     for(p of this.playerList) {
-      if(p.points > winner.points) winner = p;
+      if(p.getPoints() > winner.getPoints()) winner = p;
       else continue;
     }
     io.to(this.id).emit('end_game', winner.playerName);
-    console.log(`Winner at lobby "${this.title}": ${winner.playerName}!`);
+    console.log(`Winner at lobby "${this.title}": ${winner.playerName}! He beat ${winner.getPoints()} letters!`);
   }
 }
 class User {

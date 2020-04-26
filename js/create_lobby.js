@@ -33,6 +33,18 @@ document.getElementById('confirm_button').addEventListener('click', () => {
     }, 1000);
     return;
   }
+  if(title.length > 18) {
+    let wi = document.getElementById('lobby_title');
+    wi.className = "wrong_input";
+    wi.value = '';
+    wi.setAttribute('placeholder', 'Покороче, пожалуйста...');
+    document.querySelector('.wrong_input').focus();
+    setTimeout(() => {
+        document.querySelector('.wrong_input').className = '';
+        wi.setAttribute('placeholder', '');
+    }, 1000);
+    return;
+  }
   if(ic.className == 'fas fa-lock' && pass == '') {  
     document.getElementById('pass').className = "wrong_input";
     document.querySelector('.wrong_input').focus();

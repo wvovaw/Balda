@@ -37,6 +37,7 @@ function renderLobby(id, lobby_title, passlen, connected, required) {
     } 
     else {
         disablePass = '';
+        lock_icon = 'fas fa-lock';
     }
     if(connected == required) { 
         disableJoin = 'disabled';

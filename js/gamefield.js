@@ -169,13 +169,16 @@ window.onload = function() {
     document.getElementById('confirm_word_button').style.pointerEvents = 'none';
   }
   //Exit lobby event
-  document.getElementById('exit_button').addEventListener('click', () => {
-    socket.emit('player_leave_lobby', username, lobbyId);
-    let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
-    delete delLobbyFromJson.lobbyId;
-    fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
-    ipc.send('to_lobbyList', 'args');
-  });
+  let exit_buttons = document.querySelectorAll('.exit_button');
+  for(e of exit_buttons) {
+    e.addEventListener('click', () => {
+      socket.emit('player_leave_lobby', username, lobbyId);
+      let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
+      delete delLobbyFromJson.lobbyId;
+      fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
+      ipc.send('to_lobbyList', 'args');
+    });
+  }
   document.getElementById('close_button').addEventListener('click', () => {
     socket.emit('player_leave_lobby', username, lobbyId);
   }); 
@@ -331,10 +334,11 @@ window.onload = function() {
   });
   socket.on('end_game', (winnerName) => {
     console.log(`Game over. ${winnerName} has won! Congrats!`);
-    
+    document.getElementById('winner_name').innerText = winnerName;
+    document.getElementById('bg_endgame').style.display = 'flex';    
   });
   function placeLetter(letter, letterCoord) {
-    let l = document.getElementById(String(letterCoord));
+    let l = document.getElementById('gamezone').getElementsByClassName('letterblock')[letterCoord];
     l.innerHTML = letter;
     l.className = 'letterblock filled';
     l.removeEventListener('dragover', dragOver);
