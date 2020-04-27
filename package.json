@@ -1,11 +1,12 @@
 {
   "name": "electron-quick-start",
-  "version": "0.3.0",
+  "version": "0.8.0",
   "description": "The \"Balda\" game",
   "main": "./js/main.js",
   "scripts": {
     "client": "electron .",
-    "server": "nodemon ./Server/server"
+    "server": "nodemon ./Server/server",
+    "build": "electron-packager . Balda"
   },
   "repository": "https://github.com/wvovaw/Balda",
   "keywords": [
@@ -13,13 +14,17 @@
     "Game"
   ],
   "nodemonConfig": {
-    "ignore": ["*.json"]
+    "ignore": [
+      "*.json"
+    ]
   },
   "author": "wvovaw",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^8.2.1",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "electron-packager": "^14.2.1",
+    "electron-prebuilt": "1.4.13"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",

@@ -12,8 +12,11 @@ This is the game on the 3x3, 5x5, 7x7, or higher dimention field that starts fro
 - [X] Finish the main game conception 🏁 (place a letter, assemble a word, confirm it)
 - [X] Build a list of the used words on the right pane 📝
 - [X] Create a color scheme 🎨
-- [X] Build a score bar on the left pane 🌟
+- [X] Build a score bar on the left pane 💯
 - [X] Build a lobby list 🚪
+- [X] Limit the number of characters for lobby title and nickname 🔢
+- [X] Handle all the wrong inputs ⁉
+- [X] Create a 'Game Over' popup window 🌟 
 - [ ] Fill the bottom pane ⬇
 
 ## Server side 🔗

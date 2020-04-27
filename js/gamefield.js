@@ -1,4 +1,5 @@
-var socket = io.connect('http://localhost:3010');
+var serverurl = 'https://balda-server.herokuapp.com/';
+var socket = io.connect(serverurl);
 var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
 
@@ -279,7 +280,7 @@ window.onload = function() {
   let playerList;
   this.setTimeout(() => {
     socket.emit('join_lobby', lobbyId, username, useravatar);
-  }, 300);
+  }, 1500);
   socket.on('succsess_lobby_connection', (playerListJson) => {
     playerList = JSON.parse(playerListJson).playerList;
     for(const p of playerList) {
@@ -315,7 +316,7 @@ window.onload = function() {
     console.log(`Game has started. Init word is ${initWord}`);
     setTimeout(() => {
       drawInitWord(initWord);
-    }, 100);
+    }, 500);
   });
   socket.on('now_turns', (playerName) => {
     let prev = document.querySelector('.nowTurns');

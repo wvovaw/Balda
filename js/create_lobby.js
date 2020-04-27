@@ -1,4 +1,5 @@
-var socket = io.connect('http://localhost:3010');
+var serverurl = 'https://balda-server.herokuapp.com/';
+var socket = io.connect(serverurl);
 const remote = require('electron').remote;
 var fs = require('fs');
 

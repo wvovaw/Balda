@@ -1,4 +1,5 @@
-var socket = io.connect('http://localhost:3010');
+var serverurl = 'https://balda-server.herokuapp.com/';
+var socket = io.connect(serverurl);
 var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
 let create_lobby_win;
@@ -81,10 +82,11 @@ socket.on('no_welcome', () => {
 socket.emit('fetch_lobby_list'); // Asks server to give this client all lobbies
 socket.on('pull_lobby_list', (lobbyJson) => {
     let lobbyJsonToList = JSON.parse(lobbyJson).lobbyList;
-    //console.log(lobbyJsonToList);
-    for(const l of lobbyJsonToList) {
-        renderLobby(l.id, l.title, l.passlen, l.connected, l.required);
-    }
+    setTimeout(() => {
+        for(const l of lobbyJsonToList) {
+            renderLobby(l.id, l.title, l.passlen, l.connected, l.required);
+        }
+    }, 200);
     console.log(lobbyJson);
 }); //and handle it
 
