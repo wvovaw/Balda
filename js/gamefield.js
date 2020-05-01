@@ -92,7 +92,6 @@ window.onload = function() {
   let empties = document.querySelectorAll('.empty');
   let filleds = document.querySelectorAll('.filled');
   let letterText;  //variable of a choosed letter
-
   //Block the keyboard till the next client's turn
   for(const letter of letters) {
     letter.style.pointerEvents = 'none';
@@ -143,8 +142,18 @@ window.onload = function() {
     //Unlock word assembly
     document.getElementById('remove_letter_button').style.pointerEvents = 'auto';
   }
-  //Remove letter event
-  document.getElementById('remove_letter_button').addEventListener('click', () => {
+  document.getElementById('remove_letter_button').addEventListener('click', removeLetter);
+  document.getElementById('remove_word_button').addEventListener('click', removeWord);
+  function removeWord() {
+    for(letterblock of wordStack) {
+      if(String(letterblock.className).includes('lastFilled')) letterblock.className = 'letterblock filled lastFilled';
+      else letterblock.className = 'letterblock filled';
+    }
+    wordStack = Array();
+    document.getElementById('remove_word_button').style.pointerEvents = 'none';
+    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
+  }
+  function removeLetter() {
     if(wordStack.length > 0) removeWord();
     letterToRemove = document.querySelector('.lastFilled');
     letterToRemove.innerHTML = '';
@@ -155,19 +164,6 @@ window.onload = function() {
     }
     filleds--;
     wordStack = Array();
-    document.getElementById('remove_letter_button').style.pointerEvents = 'none';
-    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
-  });
-  //Remove word event
-  document.getElementById('remove_word_button').addEventListener('click', removeWord);
-  function removeWord() {
-    for(letterblock of wordStack) {
-      if(String(letterblock.className).includes('lastFilled')) letterblock.className = 'letterblock filled lastFilled';
-      else letterblock.className = 'letterblock filled';
-    }
-    wordStack = Array();
-    document.getElementById('remove_word_button').style.pointerEvents = 'none';
-    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
   }
   //Exit lobby event
   let exit_buttons = document.querySelectorAll('.exit_button');
@@ -182,6 +178,7 @@ window.onload = function() {
   }
   document.getElementById('close_button').addEventListener('click', () => {
     socket.emit('player_leave_lobby', username, lobbyId);
+    socket.emit('user_logout', username);
   }); 
   /* Word assembling:
   1) Set a letter 
@@ -224,10 +221,25 @@ window.onload = function() {
     if(wordStack.includes(document.querySelector('.lastFilled'))) document.getElementById('confirm_word_button').style.pointerEvents = 'auto';
   }
   // Confirm button
-  let completeWord = ''; 
+  let completeWord; 
   let letterCoord;
   let letter;
+  let usedWordsList = new Set();
+  let userPoints;
   document.getElementById('confirm_word_button').addEventListener('click', () => {
+    //Check word in the userdWordsList if not found then find it in the dictionary on the server
+    completeWord = ''; // СЛОВО ПОЛУЧАЕТСЯ UNDEFINEDСЛОВО
+    for(letterblock of wordStack) {
+      completeWord += letterblock.innerHTML;
+    }
+    completeWord = completeWord.slice(9);
+    //Check in the list
+    if(usedWordsList.has(completeWord)) {
+      removeLetter();
+      letter = letterCoord = completeWord = wordStack = '';
+      return;
+    }
+    //else if(socket.emit('check_word', completeWord)...etc...) else in the dict
     //Rebuild empties
     empties = document.querySelectorAll('.empty');
     wordStack = wordStack.slice(1);
@@ -240,7 +252,6 @@ window.onload = function() {
         letterblock.removeEventListener('drop', dragDrop);
       }
       else letterblock.className = 'letterblock filled';
-      completeWord += letterblock.innerHTML;
       letterCoord = document.querySelector('.lastFilled').id;
       letter = document.querySelector('.lastFilled').innerHTML;
       //Block the keyboard till the next client's turn
@@ -257,6 +268,9 @@ window.onload = function() {
     document.getElementById('remove_word_button').style.pointerEvents = 'none';
     document.getElementById('confirm_word_button').style.pointerEvents = 'none';
     socket.emit('i_end_turn', lobbyId, completeWord, username, letter, letterCoord);
+    userPoints = Number(document.getElementById(username).querySelectorAll('.user_profile_userPoints')[0].innerText.split(' ')[1]) + completeWord.length;
+    document.getElementById(username).querySelectorAll('.user_profile_userPoints')[0].innerText = `Очки: ${userPoints}`;
+
   });
   function newTurn() {
     //Unlock the keyboard
@@ -289,7 +303,7 @@ window.onload = function() {
       <div class="player" id="${p.playerName}">
         <img class="user_profile_avatar" src="${p.playerAvatar}">
         <div class="user_profile_username">${p.playerName}</div>
-        <div class="user_profile_userlvl">Очки: ${p.playerPoints}</div>
+        <div class="user_profile_userPoints">Очки: ${p.playerPoints}</div>
         <div class="user_turn_progressbar"></div>
       </div>`;
     }
@@ -304,7 +318,7 @@ window.onload = function() {
       <div class="player" id="${playerName}">
         <img class="user_profile_avatar" src="${playerAvatar}">
         <div class="user_profile_username">${playerName}</div>
-        <div class="user_profile_userlvl">Очки: ${playerPoints}</div>
+        <div class="user_profile_userPoints">Очки: ${playerPoints}</div>
         <div class="user_turn_progressbar"></div>
       </div>`;
   });
@@ -332,6 +346,8 @@ window.onload = function() {
   socket.on('board_changes', (usedWord, playerName, letter, letterCoord) => {
     placeLetter(letter, letterCoord);
     addUsedWord(usedWord, playerName);
+    userPoints = Number(document.getElementById(playerName).querySelectorAll('.user_profile_userPoints')[0].innerText.split(' ')[1]) + usedWord.length;
+    document.getElementById(playerName).querySelectorAll('.user_profile_userPoints')[0].innerText = `Очки: ${userPoints}`;
   });
   socket.on('end_game', (winnerName) => {
     console.log(`Game over. ${winnerName} has won! Congrats!`);
@@ -353,5 +369,7 @@ window.onload = function() {
   }
   function addUsedWord(word, owner) {
     document.getElementById('used_words').innerHTML += `<li class="used_word" owner="${owner}">${word}</li>`;
+    usedWordsList.add(word);
+    console.log(usedWordsList);
   }
 }

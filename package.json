@@ -6,7 +6,8 @@
   "scripts": {
     "client": "electron .",
     "server": "nodemon ./Server/server",
-    "build": "electron-packager . Balda"
+    "build": "electron-packager . Balda --overwrite",
+    "dist:windows": "electron-builder --windows"
   },
   "repository": "https://github.com/wvovaw/Balda",
   "keywords": [

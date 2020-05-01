@@ -53,7 +53,7 @@ body {
     margin-top: 10px;
     color: #50fa7b;
 }
-.user_profile_userlvl {
+.user_profile_userPoints {
     grid-row: 2;
     grid-column: 2;
     font-size: small;
