@@ -1,10 +1,24 @@
 # The "Balda" game
+
 ![GitHub watchers](https://img.shields.io/github/watchers/wvovaw/Balda?label=Watched&style=social)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wvovaw/Balda)
+[![CodeFactor](https://www.codefactor.io/repository/github/wvovaw/balda/badge)](https://www.codefactor.io/repository/github/wvovaw/balda)
 ## Description
 
-This is the game on the 3x3, 5x5, 7x7, or higher dimention field that starts from the word on the middle row. Players should place a letter to the free circuit and make a new one word. Win the person who have used more letters to assemble words.
+This is the game on the 7x7 (comminly 5x5 but not in this case) field that starts from the word on the middle row. Players should place a letter to the free circuit and assemble a new one word. Person who have used more letters to assemble words wins.
 
+The server is now deployed on Heroku. Server repo is ![here](https://github.com/wvovaw/Balda-server)
+
+# Clone and build
+
+```sh
+git clone https://github.com/wvovaw/Balda.git
+cd Balda
+npm install
+npm run build
+```
 # Todo ☑
+
 ## Client side 🖥
 
 - [X] Build a gamefield 📋
