@@ -179,8 +179,50 @@ body {
     margin-bottom: 10px;
     margin-top: 13px;
 }
+/* Messagebox */
+#bg_messagebox {
+    left: 340px;
+    position: absolute;
+    top: 30px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+#messagebox {
+    border-radius: 10px;
+    width: 300px;
+    height: 90px;
+    background-color:rgba(31, 33, 43, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: -30%;
+  }
+  .animate_messagebox {
+    animation: show_message 3s cubic-bezier(0.98,-0.02, 0.54, 1.3);
+  }
+  @keyframes show_message{
+    0% {top: -30%;}
+    20% {top: 1%;}
+    90% {top: 1%;}
+    100% {top: -30%;}
+ }
+  #messagebox_title {
+    color: whitesmoke;
+    font-size: 22px;
+    margin: 10px 0px 0px 0px;
+  }
+  #underline {
+    height: 1px;
+    background-color: #50fa7b;
+  }
+  #messagebox_message {
+    color: whitesmoke;
+    font-size: 15px;
+    margin-top: 20px;
+  }
 /* Game over popup */
-
 #bg_endgame { 
     width: 100%;
     height: 100%;

@@ -96,11 +96,9 @@ function connectToLobby(lobbyId, required) {
 socket.on('no_welcome', (cause, lobbyId) => {
     if(cause == 'pass') {
         document.getElementById(lobbyId).getElementsByClassName('pass_wrap')[0].querySelector('#pass_input').id = "wrong_input";
-        document.getElementById('wrong_input').setAttribute('placeholder', 'Неверный пароль');
         document.getElementById('wrong_input').focus();
         setTimeout(() => {
             document.getElementById('wrong_input').id = "pass_input";            
-            document.getElementById('wrong_input').setAttribute('placeholder', '');
         }, 1000);
         console.log('Wrong pass.');
     }

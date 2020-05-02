@@ -4,66 +4,62 @@ var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
 
 window.onload = function() {
-  //Game field (All the letters is empty at the begining)
   for (var i = 0; i < 49; i++) {
     document.getElementById('gamezone').innerHTML += '<div id="' + i + '" class="letterblock empty"></div>';    
   }
-  //Adjacency list
   var adjacencyList = [
-    [1, 7], // 0
-    [0, 2, 8], //1
-    [1, 3, 9], //2
-    [2, 4, 10], //3
-    [3, 5, 11], //4
-    [4, 6, 12], //5
-    [5, 13], //6
-    [0, 8, 14], //7
-    [1, 7, 9, 15], // 8
-    [2, 8, 10, 16], //9
-    [3, 9, 11, 17], //10
-    [4, 10, 12, 18], //11
-    [5, 11, 13, 19], //12
-    [6, 12, 20], //13
-    [7, 15, 21], //14
-    [8, 14, 16, 22], //15
-    [9, 15, 17, 23], //16
-    [10, 16, 18, 24], // 17
-    [11, 17, 19, 25], //18
-    [12, 18, 20, 26], //19
-    [13, 19, 27], //20
-    [14, 22, 28], //21
-    [15, 21, 23, 29], //22
-    [16, 22, 24, 30], //23
-    [17, 23, 25, 31], //24
-    [18, 24, 26, 32], //25
-    [19, 25, 27, 33], //26
-    [20, 26, 34], //27
-    [21, 29, 35], //28
-    [22, 28, 30, 36], //29
-    [23, 29, 31, 37], //30
-    [24, 30, 32, 38], //31
-    [25, 31, 33, 39], //32
-    [26, 32, 34, 40], //33
-    [27, 33, 41], //34
-    [28, 36, 42], //35
-    [29, 35, 37, 43], //36
-    [30, 36, 38, 44], //37
-    [31, 37, 39, 45], //38
-    [32, 38, 40, 46], //39
-    [33, 39, 41, 47], //40
-    [34, 40, 48], //41
-    [35, 43], //42
-    [36, 42, 44], //43
-    [37, 43, 45], //44
-    [38, 44, 46], //45
-    [39, 45, 47], //46
-    [40, 46, 48], //47
-    [41, 47] //48
+    [1, 7],         
+    [0, 2, 8],      
+    [1, 3, 9],      
+    [2, 4, 10],     
+    [3, 5, 11],     
+    [4, 6, 12],     
+    [5, 13],        
+    [0, 8, 14],     
+    [1, 7, 9, 15],  
+    [2, 8, 10, 16], 
+    [3, 9, 11, 17], 
+    [4, 10, 12, 18], 
+    [5, 11, 13, 19], 
+    [6, 12, 20], 
+    [7, 15, 21], 
+    [8, 14, 16, 22],
+    [9, 15, 17, 23],
+    [10, 16, 18, 24], 
+    [11, 17, 19, 25], 
+    [12, 18, 20, 26], 
+    [13, 19, 27], 
+    [14, 22, 28], 
+    [15, 21, 23, 29],
+    [16, 22, 24, 30],
+    [17, 23, 25, 31],
+    [18, 24, 26, 32],
+    [19, 25, 27, 33],
+    [20, 26, 34], 
+    [21, 29, 35], 
+    [22, 28, 30, 36], 
+    [23, 29, 31, 37], 
+    [24, 30, 32, 38], 
+    [25, 31, 33, 39], 
+    [26, 32, 34, 40], 
+    [27, 33, 41], 
+    [28, 36, 42], 
+    [29, 35, 37, 43], 
+    [30, 36, 38, 44], 
+    [31, 37, 39, 45], 
+    [32, 38, 40, 46], 
+    [33, 39, 41, 47], 
+    [34, 40, 48],
+    [35, 43], 
+    [36, 42, 44],
+    [37, 43, 45],
+    [38, 44, 46],
+    [39, 45, 47],
+    [40, 46, 48],
+    [41, 47]
   ];
-  //Keyboard
   var rus_alph = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
   var eng_alph = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  //Realize multilanguage feature
   var gameLanguage = rus_alph; 
   document.getElementById('gamezone').innerHTML += '<div id="keyboard"></div>'; 
   for (var i = 0; i < gameLanguage.length; i++) {
@@ -77,32 +73,18 @@ window.onload = function() {
       placeLetter(word[j++], i);
      }
   }
- //drag'n'drop
-  /*
-  1) Drug a letter up
-  2) Hover it over a letter block
-    a)  If it's not empty, then don't do anything. Continue
-    b)  If it's empty, drop a letter in it 
-        and close the keyboard (Disable 'draggable')
-        while a letter is in the letterblock.
-  3) Open the keyboard if turn has begun or the letter was removed from the field 
-   */
-  //Collections of elements by class
   let letters = document.querySelectorAll('.letter');
   let empties = document.querySelectorAll('.empty');
   let filleds = document.querySelectorAll('.filled');
-  let letterText;  //variable of a choosed letter
-  //Block the keyboard till the next client's turn
+  let letterText;
   for(const letter of letters) {
     letter.style.pointerEvents = 'none';
     letter.style.backgroundColor = '#606060';
   }
-  //Events for letters
   for(const letter of letters) {
     letter.addEventListener('dragstart', dragStart);
     letter.addEventListener('dragend', dragEnd);
   }
-  //Events for empty letterblocks
   for(const empty of empties) {
     empty.addEventListener('dragover', dragOver);
     empty.addEventListener('dragenter', dragEnter);
@@ -130,16 +112,13 @@ window.onload = function() {
   function dragDrop() {
     this.innerHTML = letterText;
     this.className = 'letterblock filled lastFilled';
-    //Block until the end of turn or deleting of the last placed letter
     for(const letter of letters) {
       letter.style.pointerEvents = 'none';
       letter.style.backgroundColor = '#606060';
     }
     this.addEventListener('click', markLetter);
-    //Rebuild filleds
     filleds = document.querySelectorAll('.filled');
     console.log(filleds);
-    //Unlock word assembly
     document.getElementById('remove_letter_button').style.pointerEvents = 'auto';
   }
   document.getElementById('remove_letter_button').addEventListener('click', removeLetter);
@@ -165,7 +144,6 @@ window.onload = function() {
     filleds--;
     wordStack = Array();
   }
-  //Exit lobby event
   let exit_buttons = document.querySelectorAll('.exit_button');
   for(e of exit_buttons) {
     e.addEventListener('click', () => {
@@ -180,26 +158,6 @@ window.onload = function() {
     socket.emit('player_leave_lobby', username, lobbyId);
     socket.emit('user_logout', username);
   }); 
-  /* Word assembling:
-  1) Set a letter 
-  2) click on the 1-st letter of the needed word
-  3) drag it over the next one letterblock
-    a) If cursor is over an empty letterblock then cancel word assembling
-    b) If cursor is over the letter then check if this already in the stack
-      ba) If true then make it inactive
-      bb) If false then continue  
-  
-  repeate while drop event (or right click event) does not occur.
-  
-  4) Check if last placed letter isn't in the collection
-    a) If true then cancel assembling
-    b) Else send a word to check 
-
-    P.S: I've tried all this stuf and found it's prety complicated so now I'll realize click-style word assembling... Leave all this draggable mechanics to the best future...
-    P.P.S: I've returned back to slide because click logic would be more comlicated.
-
-  */
-
   let wordStack = Array();
   for(filled of filleds) {
     filled.addEventListener('click', markLetter);
@@ -220,31 +178,50 @@ window.onload = function() {
     document.getElementById('remove_word_button').style.pointerEvents = 'auto';
     if(wordStack.includes(document.querySelector('.lastFilled'))) document.getElementById('confirm_word_button').style.pointerEvents = 'auto';
   }
-  // Confirm button
   let completeWord; 
   let letterCoord;
   let letter;
   let usedWordsList = new Set();
   let userPoints;
-  document.getElementById('confirm_word_button').addEventListener('click', () => {
-    //Check word in the userdWordsList if not found then find it in the dictionary on the server
-    completeWord = ''; // СЛОВО ПОЛУЧАЕТСЯ UNDEFINEDСЛОВО
+  function check_word(word) {
+    return new Promise((resolve) => {
+      socket.emit('check_word', word);
+      socket.once('check_word_result', (result) => {
+        console.log(`WORD CHECKING RESULT: ${result}`);
+        resolve(result);
+      });
+    });
+  }
+  document.getElementById('confirm_word_button').addEventListener('click', async () => {
+    completeWord = '';
     for(letterblock of wordStack) {
       completeWord += letterblock.innerHTML;
     }
     completeWord = completeWord.slice(9);
-    //Check in the list
     if(usedWordsList.has(completeWord)) {
       removeLetter();
       letter = letterCoord = completeWord = wordStack = '';
       return;
     }
-    //else if(socket.emit('check_word', completeWord)...etc...) else in the dict
-    //Rebuild empties
+    let check_word_result = await check_word(completeWord);
+    if(check_word_result == false) {
+      removeLetter();
+      letter = letterCoord = completeWord = wordStack = '';
+      console.log(`Word '${completeWord}' does not exist.`);
+      //Show dialog message that word doesn't exist
+      showMessage('Такого слова нет', 'Найдите другое');
+      return;
+    }
+    else if(check_word_result == true) console.log(`Word '${completeWord}' exists.`);
+    else  {
+      console.log('ERR! Can\'t check the word. Try again');
+      removeLetter();
+      letter = letterCoord = completeWord = wordStack = '';
+      return;
+    }
     empties = document.querySelectorAll('.empty');
     wordStack = wordStack.slice(1);
     for(letterblock of wordStack) {
-      //Remove event listener of empty class
       if(String(letterblock.className).includes('lastFilled')) {
         letterblock.removeEventListener('dragover', dragOver);
         letterblock.removeEventListener('dragenter', dragEnter);
@@ -254,7 +231,6 @@ window.onload = function() {
       else letterblock.className = 'letterblock filled';
       letterCoord = document.querySelector('.lastFilled').id;
       letter = document.querySelector('.lastFilled').innerHTML;
-      //Block the keyboard till the next client's turn
       for(const letter of letters) {
         letter.style.pointerEvents = 'none';
         letter.style.backgroundColor = '#606060';
@@ -270,10 +246,8 @@ window.onload = function() {
     socket.emit('i_end_turn', lobbyId, completeWord, username, letter, letterCoord);
     userPoints = Number(document.getElementById(username).querySelectorAll('.user_profile_userPoints')[0].innerText.split(' ')[1]) + completeWord.length;
     document.getElementById(username).querySelectorAll('.user_profile_userPoints')[0].innerText = `Очки: ${userPoints}`;
-
   });
   function newTurn() {
-    //Unlock the keyboard
     for(const letter of letters) {
       letter.style.pointerEvents = 'auto';
       letter.style.backgroundColor = '#909090';
@@ -283,9 +257,6 @@ window.onload = function() {
     letterCoord = '';
     letter = '';
   }
-
-//Socket work
-
   let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
   let username = userProfile.username;
   let useravatar = userProfile.useravatar;
@@ -313,7 +284,7 @@ window.onload = function() {
     }
   });
   socket.on('playerConnected', (playerName, playerAvatar, playerPoints) => {
-    console.log(`New player connected: ${playerName}.`);
+    if(username != playerName) showMessage('Игрок подключился:', `${playerName}`);
     document.getElementById('tierlist').innerHTML += `
       <div class="player" id="${playerName}">
         <img class="user_profile_avatar" src="${playerAvatar}">
@@ -323,14 +294,17 @@ window.onload = function() {
       </div>`;
   });
   socket.on('playerDisconnected', (playerName) => {
-    console.log(`Player ${playerName} has disconnected.`);
+    showMessage('Игрок вышел:', `${playerName}`);
     document.getElementById(playerName).remove();
   });
   socket.on('game_started', (initWord) => {
     console.log(`Game has started. Init word is ${initWord}`);
     setTimeout(() => {
       drawInitWord(initWord);
-    }, 500);
+      showMessage('Игра началась!', '');
+      //Sound alert
+    }, 300);
+
   });
   socket.on('now_turns', (playerName) => {
     let prev = document.querySelector('.nowTurns');
@@ -339,9 +313,12 @@ window.onload = function() {
     }
     document.getElementById(playerName).className += ' nowTurns';
     if(username == playerName) {
-      console.log('THIS IS MY TURN NOW!');
+      showMessage('Ваш ход!', 'Ищи слово ебать');
+      //Sound alert
       newTurn();
+      return;
     }
+    showMessage(`Ходит ${playerName}`, 'Давай, неудачник...');
   });
   socket.on('board_changes', (usedWord, playerName, letter, letterCoord) => {
     placeLetter(letter, letterCoord);
@@ -363,7 +340,6 @@ window.onload = function() {
     l.removeEventListener('dragleave', dragLeave);
     l.removeEventListener('drop', dragDrop);
     l.addEventListener('click', markLetter);
-    //Rebuild empties and filleds
     empties = document.querySelectorAll('.empty');
     filleds = document.querySelectorAll('.filled');
   }
@@ -371,5 +347,17 @@ window.onload = function() {
     document.getElementById('used_words').innerHTML += `<li class="used_word" owner="${owner}">${word}</li>`;
     usedWordsList.add(word);
     console.log(usedWordsList);
+  }
+  function showMessage(title, message) {
+    document.getElementById('messagebox_title').innerText = title;
+    document.getElementById('messagebox_message').innerText = message;
+    let title_width = document.getElementById('messagebox_title').offsetWidth;
+    document.getElementById('underline').style.width = title_width + 'px';
+    document.getElementById('bg_messagebox').style.display = 'flex';
+    document.getElementById('messagebox').className = 'animate_messagebox';
+    setTimeout(()=>{
+      document.getElementById('messagebox').className = '';
+      document.getElementById('bg_messagebox').style.display = 'none';
+    }, 3001);
   }
 }
