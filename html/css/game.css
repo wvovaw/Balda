@@ -61,7 +61,7 @@ body {
     color: #f1fa8c;
 }
 .user_turn_progressbar {
-    border: 1px green solid;
+    background-color: #50fa7b;
     grid-row: 3;
     grid-column: 1 / -1;
     max-height: 7px;
@@ -138,11 +138,17 @@ body {
 .used_word {
     margin: 3px;
 }
+.turn_skip {
+    color: grey;
+    font-style: italic;
+}
 #used_words {
     height: 98%;
-    width: 80%;
+    width: 95%;
     overflow: hidden;
     overflow-y: scroll;
+    list-style: none;
+    padding-left: 5px;
 }
 #right_pane_buttons {
     height: 16%;

@@ -69,6 +69,7 @@ window.onload = function() {
   let gamezone = document.getElementById('gamezone');
   function drawInitWord(word) {
     let j=0;
+    
     for(var i = 21; i < 28; i++) {
       placeLetter(word[j++], i);
      }
@@ -145,15 +146,17 @@ window.onload = function() {
     wordStack = Array();
   }
   let exit_buttons = document.querySelectorAll('.exit_button');
-  for(e of exit_buttons) {
-    e.addEventListener('click', () => {
-      socket.emit('player_leave_lobby', username, lobbyId);
-      let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
-      delete delLobbyFromJson.lobbyId;
-      fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
-      ipc.send('to_lobbyList', 'args');
-    });
-  }
+  setTimeout(() => {
+    for(e of exit_buttons) {
+      e.addEventListener('click', () => {
+        socket.emit('player_leave_lobby', username, lobbyId);
+        let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
+        delete delLobbyFromJson.lobbyId;
+        fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
+        ipc.send('to_lobbyList', 'args');
+      });
+    }
+  }, 1500);
   document.getElementById('close_button').addEventListener('click', () => {
     socket.emit('player_leave_lobby', username, lobbyId);
     socket.emit('user_logout', username);
@@ -236,7 +239,7 @@ window.onload = function() {
         letter.style.backgroundColor = '#606060';
       }
     }
-    addUsedWord(completeWord);
+    addUsedWord(completeWord, username);
     for(letterblock of wordStack) {
       letterblock.className = 'letterblock filled';
     }
@@ -246,6 +249,7 @@ window.onload = function() {
     socket.emit('i_end_turn', lobbyId, completeWord, username, letter, letterCoord);
     userPoints = Number(document.getElementById(username).querySelectorAll('.user_profile_userPoints')[0].innerText.split(' ')[1]) + completeWord.length;
     document.getElementById(username).querySelectorAll('.user_profile_userPoints')[0].innerText = `Очки: ${userPoints}`;
+    document.getElementById(username).getElementsByClassName('user_turn_progressbar')[0].style.width = '0%';
   });
   function newTurn() {
     for(const letter of letters) {
@@ -263,9 +267,9 @@ window.onload = function() {
   let lobbyId = userProfile.lobbyId;
   let requiredPlayers = Number(userProfile.required);
   let playerList;
-  this.setTimeout(() => {
+  setTimeout(() => {
     socket.emit('join_lobby', lobbyId, username, useravatar);
-  }, 1500);
+  }, 1000); // Causing an error when user leave lobby before he joinned to it
   socket.on('succsess_lobby_connection', (playerListJson) => {
     playerList = JSON.parse(playerListJson).playerList;
     for(const p of playerList) {
@@ -277,6 +281,7 @@ window.onload = function() {
         <div class="user_profile_userPoints">Очки: ${p.playerPoints}</div>
         <div class="user_turn_progressbar"></div>
       </div>`;
+      document.getElementById(p.playerName).getElementsByClassName('user_turn_progressbar')[0].style.width = '0%';
     }
     if(document.querySelectorAll('.player').length == requiredPlayers) {
       socket.emit('start_game', lobbyId);
@@ -292,6 +297,7 @@ window.onload = function() {
         <div class="user_profile_userPoints">Очки: ${playerPoints}</div>
         <div class="user_turn_progressbar"></div>
       </div>`;
+      document.getElementById(playerName).getElementsByClassName('user_turn_progressbar')[0].style.width = '0%';
   });
   socket.on('playerDisconnected', (playerName) => {
     showMessage('Игрок вышел:', `${playerName}`);
@@ -300,34 +306,102 @@ window.onload = function() {
   socket.on('game_started', (initWord) => {
     console.log(`Game has started. Init word is ${initWord}`);
     setTimeout(() => {
-      drawInitWord(initWord);
+      drawInitWord(initWord.toUpperCase());
       showMessage('Игра началась!', '');
       //Sound alert
     }, 300);
 
   });
+  let progress;
+  let w;
+  let timer;
+  function countDown(playerName) {
+    progress = document.getElementById(playerName).getElementsByClassName('user_turn_progressbar')[0];
+    w = 90;
+    clearInterval(timer);
+    timer = null;
+    barTick = function() {
+      w -= 2;
+      progress.style.width = `${w}%`;
+      if(w == 0) {
+        clearInterval(timer);
+        timer = null;
+        if(username == playerName) {
+          socket.emit('i_skip_turn', lobbyId, username);
+          for(const letter of letters) {
+            letter.style.pointerEvents = 'none';
+            letter.style.backgroundColor = '#606060';
+          }
+          for(letterblock of wordStack) {
+            letterblock.className = 'letterblock filled';
+          }
+          document.getElementById('remove_letter_button').style.pointerEvents = 'none';
+          document.getElementById('remove_word_button').style.pointerEvents = 'none';
+          document.getElementById('confirm_word_button').style.pointerEvents = 'none';
+        }
+      }
+    }
+    timer = setInterval(barTick, 1000);
+  }
   socket.on('now_turns', (playerName) => {
     let prev = document.querySelector('.nowTurns');
     if(prev !== null && prev !== undefined) {
+      prev.children[3].style.width = '0%';
       prev.className = 'player';
     }
     document.getElementById(playerName).className += ' nowTurns';
+    document.getElementById(playerName).getElementsByClassName('user_turn_progressbar')[0].style.width = '90%';
+    //Timer
+    countDown(playerName);
     if(username == playerName) {
-      showMessage('Ваш ход!', 'Ищи слово ебать');
+      showMessage('Ваш ход!', 'Ищи слово');
       //Sound alert
       newTurn();
       return;
     }
     showMessage(`Ходит ${playerName}`, 'Давай, неудачник...');
   });
+  socket.on('looser', (playerName) => {
+    if(username == playerName) {
+      console.log(`Game over. You have reached three penalties... Better luck next time!`);
+      document.getElementById('winner_sign').innerText = 'Поражение...';
+      document.getElementById('winner_name').innerText = 'Вы пропустили 3 хода.';
+      document.getElementById('endgame_exit_button').remove();
+      document.getElementById('bg_endgame').style.display = 'flex';    
+      setTimeout(() => {
+        let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
+        delete delLobbyFromJson.lobbyId;
+        fs.writeFileSync('./cfg.json', JSON.stringify(delLobbyFromJson));
+        ipc.send('to_lobbyList', 'args');
+      }, 5000);
+   }
+   else showMessage('Поражение', `${playerName} пропустил 3 хода`);
+  });
+  let coord;
+  function removeLastTurnHighlight() {
+    if(coord != undefined) {
+      document.getElementById(coord).style.backgroundColor = 'rgba(255, 255, 255, 0%)';
+      console.log('Ok, i see it!');
+      coord = undefined;
+    }
+  }
+  document.addEventListener('mousedown', removeLastTurnHighlight);
   socket.on('board_changes', (usedWord, playerName, letter, letterCoord) => {
-    placeLetter(letter, letterCoord);
-    addUsedWord(usedWord, playerName);
-    userPoints = Number(document.getElementById(playerName).querySelectorAll('.user_profile_userPoints')[0].innerText.split(' ')[1]) + usedWord.length;
-    document.getElementById(playerName).querySelectorAll('.user_profile_userPoints')[0].innerText = `Очки: ${userPoints}`;
+    if(usedWord == null) {
+      document.getElementById('used_words').innerHTML += `<li class="used_word turn_skip" owner="${playerName}">${playerName} : Пропуск хода</li>`;
+    }
+    else {
+      placeLetter(letter, letterCoord);
+      coord = letterCoord;
+      document.getElementById(letterCoord).style.backgroundColor = 'rgba(255, 255, 255, 10%)';
+      addUsedWord(usedWord, playerName);
+      userPoints = Number(document.getElementById(playerName).querySelectorAll('.user_profile_userPoints')[0].innerText.split(' ')[1]) + usedWord.length;
+      document.getElementById(playerName).querySelectorAll('.user_profile_userPoints')[0].innerText = `Очки: ${userPoints}`;
+  }  
   });
   socket.on('end_game', (winnerName) => {
     console.log(`Game over. ${winnerName} has won! Congrats!`);
+    clearInterval(timer);
     document.getElementById('winner_name').innerText = winnerName;
     document.getElementById('bg_endgame').style.display = 'flex';    
   });
@@ -344,7 +418,7 @@ window.onload = function() {
     filleds = document.querySelectorAll('.filled');
   }
   function addUsedWord(word, owner) {
-    document.getElementById('used_words').innerHTML += `<li class="used_word" owner="${owner}">${word}</li>`;
+    document.getElementById('used_words').innerHTML += `<li class="used_word" owner="${owner}">${owner} : ${word}</li>`;
     usedWordsList.add(word);
     console.log(usedWordsList);
   }
@@ -358,6 +432,6 @@ window.onload = function() {
     setTimeout(()=>{
       document.getElementById('messagebox').className = '';
       document.getElementById('bg_messagebox').style.display = 'none';
-    }, 3001);
+    }, 3000);
   }
 }

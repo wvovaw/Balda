@@ -65,7 +65,7 @@ body {
 #search_block {
   display: grid;
   margin: 35px 20px 10px 20px;
-  grid-template-columns: 5fr 1fr 1fr;
+  grid-template-columns: 7fr 1fr 1fr 1fr;
 }
 /* Left pane */
 #left {
@@ -83,7 +83,7 @@ body {
   overflow: hidden;
   overflow-y: scroll;
 }
-#chat_input {
+.chat_input {
   grid-column: 1;
   height: 17px;
   width: 139px;

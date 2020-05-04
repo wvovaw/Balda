@@ -20,19 +20,22 @@ document.getElementById('new_lobby').addEventListener('click', () => {
         socket.emit('host_join_lobby', username);
     });
 });
+document.getElementById('reload_list').addEventListener('click', () => {
+    lobby_list.innerHTML = '';
+    socket.emit('fetch_lobby_list');
+});
 document.getElementById('send_message').addEventListener('click', () => {
-    let mes = String(document.getElementById('chat_input').value);
-    if(mes.length == 0) {
-        document.getElementById('chat_input').id = 'wrong_input';
+    let mes = String(document.getElementsByClassName('chat_input')[0].value);
+    if(mes.length == 0 || mes == undefined) {
+        document.getElementsByClassName('chat_input')[0].id = 'wrong_input';
         document.getElementById('wrong_input').focus();
         setTimeout(() => {
-            document.getElementById('wrong_input').id = 'pass_input';            
-            document.getElementById('wrong_input').setAttribute('placeholder', '');
+            document.getElementById('wrong_input').id = '';            
         }, 1000);
     }
     else {
         socket.emit('mes', username, mes);
-        document.getElementById('chat_input').value = '';
+        document.getElementsByClassName('chat_input')[0].value = '';
     }
 });
 document.getElementById('close_button').addEventListener('click', () => {
@@ -113,11 +116,9 @@ socket.on('no_welcome', (cause, lobbyId) => {
 socket.emit('fetch_lobby_list'); // Asks server to give this client all lobbies
 socket.on('pull_lobby_list', (lobbyJson) => {
     let lobbyJsonToList = JSON.parse(lobbyJson).lobbyList;
-    setTimeout(() => {
-        for(const l of lobbyJsonToList) {
-            renderLobby(l.id, l.title, l.passlen, l.connected, l.required, l.gameHasbegun);
-        }
-    }, 200);
+    for(const l of lobbyJsonToList) {
+        renderLobby(l.id, l.title, l.passlen, l.connected, l.required, l.gameHasbegun);
+    }
     console.log(lobbyJson);
 });
 socket.emit('fetch_message_list'); // And messages
