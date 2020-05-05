@@ -1,19 +1,28 @@
 {
   "name": "Balda",
-  "version": "0.8.0",
+  "version": "0.6.1",
   "description": "The \"Balda\" game",
   "main": "./js/main.js",
   "scripts": {
     "client": "electron .",
-    "build": "electron-packager . Balda --overwrite",
-    "dist:windows": "electron-builder --windows"
+    "build": "electron-packager . Balda --overwrite"
   },
   "repository": "https://github.com/wvovaw/Balda",
   "keywords": [
     "Balda",
-    "Game"
+    "Game",
+    "Multiplayer"
   ],
   "author": "wvovaw",
+  "testers": [
+    "logoprost",
+    "xyonce",
+    "cocickavteste",
+    "hobot",
+    "angelOfAnuus",
+    "shensize",
+    "gnil_skotina"
+  ],
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^8.2.1",
