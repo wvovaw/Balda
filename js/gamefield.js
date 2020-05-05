@@ -85,14 +85,7 @@ window.onload = function() {
   for(const letter of letters) {
     letter.addEventListener('dragstart', dragStart);
     letter.addEventListener('dragend', dragEnd);
-  }
-  for(const empty of empties) {
-    empty.addEventListener('dragover', dragOver);
-    empty.addEventListener('dragenter', dragEnter);
-    empty.addEventListener('dragleave', dragLeave);
-    empty.addEventListener('drop', dragDrop);
-  }
-  
+  } 
   function dragStart() {
     letterText = this.innerHTML;
     this.className += ' hold';
@@ -256,10 +249,31 @@ window.onload = function() {
       letter.style.pointerEvents = 'auto';
       letter.style.backgroundColor = '#909090';
     }
+    for(const empty of empties) {
+      empty.addEventListener('dragover', dragOver);
+      empty.addEventListener('dragenter', dragEnter);
+      empty.addEventListener('dragleave', dragLeave);
+      empty.addEventListener('drop', dragDrop);
+    }
     wordStack = Array();
     completeWord = '';
     letterCoord = '';
     letter = '';
+  }
+  function endTurn() {
+    for(const letter of letters) {
+      letter.style.pointerEvents = 'none';
+      letter.style.backgroundColor = '#606060';
+    }
+    for(const empty of empties) {
+      empty.removeEventListener('dragover', dragOver);
+      empty.removeEventListener('dragenter', dragEnter);
+      empty.removeEventListener('dragleave', dragLeave);
+      empty.removeEventListener('drop', dragDrop);
+    }
+    document.getElementById('remove_letter_button').style.pointerEvents = 'none';
+    document.getElementById('remove_word_button').style.pointerEvents = 'none';
+    document.getElementById('confirm_word_button').style.pointerEvents = 'none';
   }
   let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
   let username = userProfile.username;
@@ -328,20 +342,14 @@ window.onload = function() {
         timer = null;
         if(username == playerName) {
           socket.emit('i_skip_turn', lobbyId, username);
-          for(const letter of letters) {
-            letter.style.pointerEvents = 'none';
-            letter.style.backgroundColor = '#606060';
-          }
           for(letterblock of wordStack) {
             letterblock.className = 'letterblock filled';
           }
-          document.getElementById('remove_letter_button').style.pointerEvents = 'none';
-          document.getElementById('remove_word_button').style.pointerEvents = 'none';
-          document.getElementById('confirm_word_button').style.pointerEvents = 'none';
+          endTurn();
         }
       }
     }
-    timer = setInterval(barTick, 1000);
+    timer = setInterval(barTick, 2000);
   }
   socket.on('now_turns', (playerName) => {
     let prev = document.querySelector('.nowTurns');
