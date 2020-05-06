@@ -442,4 +442,17 @@ window.onload = function() {
       document.getElementById('bg_messagebox').style.display = 'none';
     }, 3000);
   }
+  document.getElementById('check_word_input').addEventListener('change', async () => {
+    let word = document.getElementById('check_word_input').value;
+    let check_word_result = await check_word(word);
+    if(check_word_result == true)  document.getElementById('check_word_input').className = 'word_exists';
+    else document.getElementById('check_word_input').className = 'word_doesnt_exist';
+  });
+  document.getElementById('check_word_input').addEventListener('focusout', () => {
+    document.getElementById('check_word_input').className = '';
+    document.getElementById('check_word_input').value = '';
+  });
+  document.getElementById('check_word_input').addEventListener('focusin', () => {
+    document.getElementById('check_word_input').className = '';
+  });
 }

@@ -45,11 +45,12 @@ npm run build
  - The first lettetblock background color is a color of the player from the last turn.
  - The Word direction should be displayed by arrows. ⤴
 - [X] Add reload lobby list button 🔁
+- [X] Add word check field
 
 ## Troubleshooting ⚠
 
 - [ ] Figure out how does the 'failed: WebSocket is closed before the connection is established.' problem occure. ⚠
-- [ ] On OS Windows sometimes window opens again when you create new lobby or connect to lobby. So you should  have loaded the game.html page but after window reopens you are still to lobbylist.html /shrug   
+- [ ] On OS Windows sometimes window opens again when you create new lobby or connect to lobby. So you should  have loaded the game.html page but after window reopens you are still to lobbylist.html /shrug ⚠
 
 - [ ] One accident has occured when 1 player left from one lobby and in this time another one lobby was changing so the turn has ended in the first lobby but new turn has not started... ⚠
 

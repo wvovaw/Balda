@@ -133,7 +133,7 @@ body {
 }
 /* Right pane */
 #wordlist {
-    height: 500px;
+    height: 465px;
 }
 .used_word {
     margin: 3px;
@@ -150,8 +150,18 @@ body {
     list-style: none;
     padding-left: 5px;
 }
+#check_word_input {
+    margin: 10px 1px 1px 6px;
+    width: 87%;
+}
+.word_doesnt_exist:focus {
+    box-shadow:0 0 0 2px rgba(206, 6, 39, 0.67);
+}
+.word_exists:focus {
+    box-shadow:0 0 0 2px rgba(80, 250, 123, 0.67);
+}
 #right_pane_buttons {
-    height: 10%;
+    height: 15%;
     display: grid;
     margin-top: 5px;
     grid-template-rows: 1fr 1fr;
@@ -176,14 +186,13 @@ body {
 #remove_letter_button {
     pointer-events: none;
     grid-row: 2;
-    margin-top: 13px;
+    margin: 8px 0px 0px 6px;
     height: 43px;
 }
 #remove_word_button {
     pointer-events: none;
     grid-row: 2;
-    margin-bottom: 10px;
-    margin-top: 13px;
+    margin-top: 8px;
 }
 /* Messagebox */
 #bg_messagebox {

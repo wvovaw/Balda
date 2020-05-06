@@ -150,6 +150,16 @@ body {
     list-style: none;
     padding-left: 5px;
 }
+#check_word_input {
+    margin: 10px 1px 1px 6px;
+    width: 87%;
+}
+.word_doesnt_exist:focus {
+    box-shadow:0 0 0 2px rgba(206, 6, 39, 0.67);
+}
+.word_exists:focus {
+    box-shadow:0 0 0 2px rgba(80, 250, 123, 0.67);
+}
 #right_pane_buttons {
     height: 16%;
     display: grid;
