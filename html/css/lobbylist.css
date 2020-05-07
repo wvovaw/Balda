@@ -83,7 +83,7 @@ body {
 }
 #search_block {
   display: grid;
-  margin: 35px 20px 10px 20px;
+  margin: 35px 20px 10px;
   grid-template-columns: 7fr 1fr 1fr 1fr;
 }
 /* Left pane */
@@ -110,7 +110,7 @@ body {
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: auto auto;
-  margin: 10px 6px 0 6px;
+  margin: 10px 6px 0;
   background-color:  rgba(68, 71, 90, 25%);
   border-radius: 6px;
 }
@@ -153,7 +153,7 @@ body {
 .lobby_block {
   background-color: #282a36 ;
   border-radius: 6px;
-  margin: 20px 10px 8px 10px;
+  margin: 20px 10px 8px;
   display: grid;
   grid-template-columns: 1fr 7fr 1fr 1fr 1fr;
   justify-content: center;
@@ -169,7 +169,7 @@ body {
   border-radius: 6px;
   padding: 6px;
   height: 22px;
-  margin: 17px 10px 10px 10px;
+  margin: 17px 10px 10px;
   font-size: 17px;
   -webkit-user-select: text;
 }
@@ -180,7 +180,7 @@ body {
   display: grid;
   width: fit-content;
   height: fit-content;
-  margin: 17px 10px 10px 10px;
+  margin: 17px 10px 10px;
   grid-template-columns: 1fr 1fr 1fr;
 }
 #fa-users {
@@ -197,14 +197,14 @@ body {
   height: fit-content;
 }
 .pass_wrap {
-  margin: 15px 10px 10px 10px;
+  margin: 15px 10px 10px;
 }
 .pass_input {
   background-color: wheat;
 }
 .join_button {
   height: 37px;
-  margin: 15px 10px 10px 10px;
+  margin: 15px 10px 10px;
 }
 #wrong_input:focus {
   box-shadow:0 0 0 2px rgba(206, 6, 39, 0.67)
