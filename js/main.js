@@ -21,13 +21,13 @@ function createWindow () {
 app.whenReady().then(createWindow);
 
 const {ipcMain} = require('electron');
-ipcMain.on('success_login', (event, arg) => {
+ipcMain.on('success_login', () => {
   mainWindow.loadFile('./html/lobbylist.html');
 });
-ipcMain.on('success_join_lobby', (event, arg) => {
+ipcMain.on('success_join_lobby', () => {
   mainWindow.loadFile('./html/game.html');
 });
-ipcMain.on('to_lobbyList', (event, arg) => {
+ipcMain.on('to_lobbyList', () => {
   mainWindow.loadFile('./html/lobbylist.html');
 });
 

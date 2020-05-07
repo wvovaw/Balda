@@ -197,6 +197,8 @@ window.onload = function() {
     if(usedWordsList.has(completeWord)) {
       removeLetter();
       letter = letterCoord = completeWord = wordStack = '';
+      showMessage('Это слово уже использовалось', 'Найди другое');
+      wrongWordAlert();
       return;
     }
     let check_word_result = await check_word(completeWord);
@@ -204,8 +206,8 @@ window.onload = function() {
       removeLetter();
       letter = letterCoord = completeWord = wordStack = '';
       console.log(`Word '${completeWord}' does not exist.`);
-      //Show dialog message that word doesn't exist
       showMessage('Такого слова нет', 'Найдите другое');
+      wrongWordAlert();
       return;
     }
     else if(check_word_result == true) console.log(`Word '${completeWord}' exists.`);
@@ -363,7 +365,7 @@ window.onload = function() {
     countDown(playerName);
     if(username == playerName) {
       showMessage('Ваш ход!', 'Ищи слово');
-      //Sound alert
+      turnAlert();
       newTurn();
       return;
     }
@@ -434,13 +436,25 @@ window.onload = function() {
     document.getElementById('messagebox_title').innerText = title;
     document.getElementById('messagebox_message').innerText = message;
     let title_width = document.getElementById('messagebox_title').offsetWidth;
-    document.getElementById('underline').style.width = title_width + 'px';
+    document.getElementById('underline').style.width = `${title_width}px`;
     document.getElementById('bg_messagebox').style.display = 'flex'; 
     document.getElementById('messagebox').className = 'animate_messagebox';
     setTimeout(()=>{
       document.getElementById('messagebox').className = '';
       document.getElementById('bg_messagebox').style.display = 'none';
     }, 3000);
+  }
+  function turnAlert() {
+    const turnSounds = ['idle1', 'idle2', 'idle1'];
+    let sound = new Audio(`../resources/Villager_${turnSounds[Math.floor(Math.random() * 2)]}.ogg`);
+    console.log(`Now playing: Villager_${turnSounds[Math.floor(Math.random() * 2)]}.ogg`);
+    sound.play();
+  }
+  function wrongWordAlert() {
+    const wrongSounds = ['deny1', 'deny2', 'deny1'];
+    let sound = new Audio(`../resources/Villager_${wrongSounds[Math.floor(Math.random() * 2)]}.ogg`);
+    console.log(`Now playing: Villager_${wrongSounds[Math.floor(Math.random() * 2)]}.ogg`);
+    sound.play();
   }
   document.getElementById('check_word_input').addEventListener('change', async () => {
     let word = document.getElementById('check_word_input').value;

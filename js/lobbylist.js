@@ -2,7 +2,6 @@ var serverurl = 'https://balda-server.herokuapp.com/';
 var socket = io.connect(serverurl);
 var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
-let create_lobby_win;
 document.getElementById('new_lobby').addEventListener('click', () => {
     let create_lobby_win = new remote.BrowserWindow({
         width: 400,
@@ -16,7 +15,7 @@ document.getElementById('new_lobby').addEventListener('click', () => {
         }
     });
     create_lobby_win.loadFile('./html/create_lobby.html');
-    create_lobby_win.on('closed', (e) => {
+    create_lobby_win.on('closed', () => {
         socket.emit('host_join_lobby', username);
     });
 });
@@ -49,7 +48,6 @@ document.getElementById('user_profile_username').textContent = username;
 document.getElementById('user_profile_avatar').src = useravatar;
 
 let lobby_list = document.getElementById('lobby_list');
-let join_buttons = document.querySelectorAll('.join_button');
 
 function renderLobby(id, lobby_title, passlen, connected, required, gameHasbegun) {
     let lock_icon, disablePass, disableJoin, buttonIcon = '<i class="fas fa-sign-in-alt"></i> ';

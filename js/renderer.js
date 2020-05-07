@@ -1,4 +1,4 @@
-const {remote, ipcRenderer} = require('electron');
+const {remote} = require('electron');
 
 document.getElementById('minimize_button').addEventListener('click', () => {
   remote.BrowserWindow.getFocusedWindow().minimize();

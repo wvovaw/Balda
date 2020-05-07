@@ -30,7 +30,7 @@ input {
     margin-top: 10px;
 }
 #i_lock {
-    margin: 17px 15px 0px 10px;
+    margin: 17px 15px 0 10px;
     font-size: 22px;
     width: 20px;
 }
@@ -41,7 +41,7 @@ input {
     pointer-events: none;
 }
 #i_user {
-    margin: 17px 0px 0px 10px;
+    margin: 17px 0 0 10px;
 }
 #number_of_players {
     width: 30px;

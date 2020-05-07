@@ -73,21 +73,22 @@ body {
 }
 #bot_pane {
     background-color: #1f212b;
-    height: 24px;
+    height: 16px;
     grid-row: 4;
     grid-column: 1/4;
 }
 /* The gamezone styles */
 #gamezone {
-    height: 93vh;
+    height: 94vh;
     background-color: #44475a;
     display: grid;
     grid-template-columns: 72px 72px 72px 72px 72px 72px 72px;
     grid-template-rows: 10px 72px 72px 72px 72px 72px 72px 72px 50px;
     justify-content: center;
 }
-#gamezone_filler {
-    background-color:transparent;
+#progress_bar {
+    background-color:#50fa7b;
+    width: 0px;
     grid-column: 1/-1;
 }
 .letterblock {
@@ -118,8 +119,7 @@ body {
     width: 30px;
     height: 30px;
     box-sizing: border-box;
-    box-shadow: 2px 2px 1px 0px black;
-
+    box-shadow: 2px 2px 1px 0 black;
 }
 /* Drag'n'drop classes */
 .hovered {
@@ -133,7 +133,7 @@ body {
 }
 /* Right pane */
 #wordlist {
-    height: 500px;
+    height: 465px;
 }
 .used_word {
     margin: 3px;
@@ -161,7 +161,7 @@ body {
     box-shadow:0 0 0 2px rgba(80, 250, 123, 0.67);
 }
 #right_pane_buttons {
-    height: 16%;
+    height: 15%;
     display: grid;
     margin-top: 5px;
     grid-template-rows: 1fr 1fr;
@@ -173,7 +173,7 @@ body {
     margin-top: 10px;
     margin-left: 5px;
     margin-right: 5px;
-    padding: 2px;
+    padding: 0px 2px 0px 2px;
     justify-content: space-around;
     background-color: #44475a;
 }
@@ -186,14 +186,13 @@ body {
 #remove_letter_button {
     pointer-events: none;
     grid-row: 2;
-    margin-bottom: 10px;
-    margin-top: 13px;
+    margin: 8px 0px 0px 6px;
+    height: 43px;
 }
 #remove_word_button {
     pointer-events: none;
     grid-row: 2;
-    margin-bottom: 10px;
-    margin-top: 13px;
+    margin-top: 8px;
 }
 /* Messagebox */
 #bg_messagebox {
@@ -227,7 +226,7 @@ body {
   #messagebox_title {
     color: whitesmoke;
     font-size: 22px;
-    margin: 10px 0px 0px 0px;
+    margin-top: 10px;
   }
   #underline {
     height: 1px;
@@ -239,7 +238,7 @@ body {
     margin-top: 20px;
   }
 /* Game over popup */
-#bg_endgame { 
+#bg_endgame {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
@@ -261,18 +260,18 @@ body {
 }
 #winner_sign {
     font-size: 25px;
-    margin: 0px 0px 10px 0px;   
+    margin-bottom: 10px;   
 }
 #winner_avatar {
     font-size: 100px;
 }
 #winner_name {
     font-size: 15px;
-    margin: 2px 0px 15px 0px;
+    margin: 2px 0 15px 0;
     color: #50fa7b;
 }
 #endgame_exit_button {
     height: 33px;
-    margin: 0px 0px 0px 0px;   
+    margin: 0;   
 
 }
