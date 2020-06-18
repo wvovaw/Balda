@@ -39,6 +39,8 @@ npm run build
 - [X] Limit user's time on turn ⏲
 - [ ] Fill the bottom pane (Plese, do it...) ⬇
 
+- [ ] Autoscroll down used words list on owerflow
+
 ### Friend requests 🙋
 - [ ] Each player should have his own color. All the words he have assembled in the right used words list should have this font color. Or may be I should put player name beside. 🎨
 - [ ] The last assembled word should be highlited until any user's act:

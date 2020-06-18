@@ -22,14 +22,16 @@
         </div>
         <div id="login_card_container">
             <div id="login_card">
-                <form id="log-in">
-                    <i class="fas fa-user-circle" id="add_avatar_button"></i>
-                    <input type="text" name="username" id="username" autofocus>
-                    <button id="enter_button">Войти</button>
-                </form>
+                <div id="login">
+                    <input type="text" name="username" id="username" placeholder="login" autofocus>
+		    <input type="password" name="password" placeholder="password" id="password">
+		    <button id="enter_button" onclick="confirmLogin();">Gойти</button>
+		    <br>
+		    <a id="register_button" onclick="register();">Зарегистрироваться</a>
+                </div>
             </div>
         </div>
-    </main>
+	</main>
     <!-- <script type="text/javascript" src="./Server/lib/socket.io.js"></script> -->
     <script src="../js/socket.io.js"></script>
     <script src="../js/login.js"></script>

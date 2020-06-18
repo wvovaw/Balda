@@ -1,3 +1,4 @@
+/* global io */
 var serverurl = 'https://balda-server.herokuapp.com/';
 var socket = io.connect(serverurl);
 const remote = require('electron').remote;

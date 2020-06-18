@@ -1,7 +1,7 @@
 const {app, BrowserWindow, Menu} = require('electron')
 const path = require('path');
 
-//require('electron-reload')(__dirname);
+require('electron-reload')(__dirname);
 Menu.setApplicationMenu(false);
 let mainWindow;
 function createWindow () {
