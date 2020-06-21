@@ -86,7 +86,6 @@ function confirmRegister() {
   username = un.value;
   password = ps.value;
   let conf_pass = cps.value;
-
   if(username.length == 0 || username.length == undefined) {
     un.id = 'wrong_input';
     document.getElementById('wrong_input').focus();
