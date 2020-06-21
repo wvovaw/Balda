@@ -14,24 +14,26 @@
   </head>
   <body>
     <main id="main_container">
-        <div id="head_panel">
-            <div id="titlebar">
-              <div class="titlebar_button" id="minimize_button"></div>
-              <div class="titlebar_button" id="close_button"></div>
-            </div>
+      <div id="head_panel">
+        <div id="titlebar">
+          <div class="titlebar_button" id="minimize_button"></div>
+          <div class="titlebar_button" id="close_button"></div>
         </div>
-        <div id="login_card_container">
-            <div id="login_card">
-                <div id="login">
-                    <input type="text" name="username" id="username" placeholder="login" autofocus>
-		    <input type="password" name="password" placeholder="password" id="password">
-		    <button id="enter_button" onclick="confirmLogin();">Gойти</button>
-		    <br>
-		    <a id="register_button" onclick="register();">Зарегистрироваться</a>
-                </div>
-            </div>
+      </div>
+      <div id="login_card_container">
+        <div id="login_card">
+          <div id="avatar">
+          </div>
+          <div id="login">
+            <input type="text" name="username" id="username" placeholder="login" autofocus>
+            <input type="password" name="password" placeholder="password" id="password">
+            <button id="enter_button" onclick="confirmLogin();">Gойти</button>
+            <br>
+            <a id="register_button" onclick="register();">Зарегистрироваться</a>
+          </div>
         </div>
-	</main>
+      </div>
+    </main>
     <!-- <script type="text/javascript" src="./Server/lib/socket.io.js"></script> -->
     <script src="../js/socket.io.js"></script>
     <script src="../js/login.js"></script>

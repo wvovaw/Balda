@@ -16,23 +16,34 @@ body {
     align-items: center;
 }
 #login_card {
-    background-color: #44475a;
-    border-radius: 25px;
-    width: 350px;
-    height: 350px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: #44475a;
+  border-radius: 25px;
+  width: 350px;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: inherit;
 }
-#log-in {
-    display: grid;
-    align-items: center;
-    flex-direction: column;
+#login,#register {
+  display: grid;
+  align-items: center;
+  margin-top: 60px;
+  grid-template-rows: 1fr 1fr 1fr 1fr auto auto
 }
-#add_avatar_button {
-    font-size: 150px;
-    margin-left: 27px;
-    margin-bottom: 30px;
+#avatar {
+  border: black solid 2px;
+  height: 120px;
+  width: 120px;
+  border-radius: 100px;
+  position: absolute;
+  top: 135px;
+  left: 425px;
+  background-image: url("../../resources/img/user.png");
+  background-size: contain;
+}
+#avatar_image {
+  border-radius: 50%;
 }
 #wrong_input :focus {
     box-shadow:0 0 0 2px rgba(206, 6, 39, 0.67)
