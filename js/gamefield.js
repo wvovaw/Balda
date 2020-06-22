@@ -119,7 +119,7 @@ window.onload = function() {
   document.getElementById('remove_letter_button').addEventListener('click', removeLetter);
   document.getElementById('remove_word_button').addEventListener('click', removeWord);
   function removeWord() {
-    for(letterblock of wordStack) {
+    for(let letterblock of wordStack) {
       if(String(letterblock.className).includes('lastFilled')) letterblock.className = 'letterblock filled lastFilled';
       else letterblock.className = 'letterblock filled';
     }
@@ -129,7 +129,7 @@ window.onload = function() {
   }
   function removeLetter() {
     if(wordStack.length > 0) removeWord();
-    letterToRemove = document.querySelector('.lastFilled');
+    let letterToRemove = document.querySelector('.lastFilled');
     letterToRemove.innerHTML = '';
     letterToRemove.className = 'letterblock empty';
     for(const letter of letters) {
@@ -141,7 +141,7 @@ window.onload = function() {
   }
   let exit_buttons = document.querySelectorAll('.exit_button');
   setTimeout(() => {
-    for(e of exit_buttons) {
+    for(let e of exit_buttons) {
       e.addEventListener('click', () => {
         socket.emit('player_leave_lobby', username, lobbyId);
         let delLobbyFromJson = JSON.parse(fs.readFileSync('./cfg.json'));
@@ -156,7 +156,7 @@ window.onload = function() {
     socket.emit('user_logout', username);
   }); 
   let wordStack = Array();
-  for(filled of filleds) {
+  for(let filled of filleds) {
     filled.addEventListener('click', markLetter);
   }
   function markLetter() {
@@ -191,7 +191,7 @@ window.onload = function() {
   }
   document.getElementById('confirm_word_button').addEventListener('click', async () => {
     completeWord = '';
-    for(letterblock of wordStack) {
+    for(let letterblock of wordStack) {
       completeWord += letterblock.innerHTML;
     }
     completeWord = completeWord.slice(9);

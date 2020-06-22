@@ -21,8 +21,12 @@ socket.on('register_failed', () => {
   document.getElementById('password').value = '';
   document.getElementById('confirm_password').value = '';
 });
-socket.on('success_login', () => {	
+socket.on('success_login', (userprofile) => {	
   console.log(`Log-inned as ${username}!`);
+  let stats = JSON.parse(userprofile).stats;
+  let userdata = `{"username" : "${username}", "userpassword" : "${password}", "useravatar" : "${JSON.parse(userprofile).avatar}", "lvl" : "${stats.level}", "pp" : "${stats.pp}"}`;
+  console.log(userdata);
+  fs.writeFileSync('./cfg.json', userdata);
   ipc.send('success_login', 'an-argument');
 });
 socket.on('login_failed', () => {
@@ -62,7 +66,6 @@ function confirmLogin() {
   else {
     let userdata = `{"username" : "${username}", "userpassword" : "${password}", "useravatar" : "${useravatar}"}`;
     socket.emit('user_login', userdata);
-    fs.writeFileSync('./cfg.json', userdata);
   }
 }
 // eslint-disable-next-line no-unused-vars

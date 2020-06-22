@@ -3,6 +3,39 @@ var serverurl = 'https://balda-server.herokuapp.com/';
 var socket = io.connect(serverurl);
 var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
+
+//Set user profile card
+let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
+let username = userProfile.username;
+let useravatar = userProfile.useravatar;
+let lvl = userProfile.lvl;
+let pp = userProfile.pp;
+document.getElementById('user_profile_username').textContent = username;
+if(useravatar != '') {
+  document.getElementById('user_profile_avatar').style.backgroundImage = `url(data:image/png;base64,${useravatar})`;
+}
+document.getElementById('user_profile_stats').textContent = `lvl: ${lvl} | ${pp}pp`;
+// Change user avatar
+document.getElementById('user_profile_avatar').addEventListener('click', () => {
+  avatarPicker();
+});
+
+async function avatarPicker() {
+  let {dialog} = remote;
+  let file = await dialog.showOpenDialog({
+    properties: ['openFile', 'singleselection'],
+    filters: [{
+      name: 'Images',
+      extensions: ['jpg', 'jpeg', 'png']
+    }]
+  });
+  if(file.filePaths.length !== 0) {
+    let bitmap = fs.readFileSync(file.filePaths[0]);
+    let useravatar = new Buffer(bitmap).toString('base64');
+    document.getElementById('user_profile_avatar').style.backgroundImage = `url(data:image/png;base64,${useravatar})`;
+  }
+}
+// Create new lobby
 document.getElementById('new_lobby').addEventListener('click', () => {
   let create_lobby_win = new remote.BrowserWindow({
     width: 400,
@@ -20,10 +53,12 @@ document.getElementById('new_lobby').addEventListener('click', () => {
     socket.emit('host_join_lobby', username);
   });
 });
+// Reload lobby list
 document.getElementById('reload_list').addEventListener('click', () => {
   lobby_list.innerHTML = '';
   socket.emit('fetch_lobby_list');
 });
+// Send message
 document.getElementById('send_message').addEventListener('click', () => {
   let mes = String(document.getElementsByClassName('chat_input')[0].value);
   if(mes.length == 0 || mes == undefined) {
@@ -38,18 +73,13 @@ document.getElementById('send_message').addEventListener('click', () => {
     document.getElementsByClassName('chat_input')[0].value = '';
   }
 });
+// Close window
 document.getElementById('close_button').addEventListener('click', () => {
   socket.emit('user_logout', username);
 }); 
-//Set user profile card
-let userProfile = JSON.parse(fs.readFileSync('./cfg.json'));
-let username = userProfile.username;
-let useravatar = userProfile.useravatar;
-document.getElementById('user_profile_username').textContent = username;
-document.getElementById('user_profile_avatar').src = useravatar;
 
 let lobby_list = document.getElementById('lobby_list');
-
+// Render lobby list function
 function renderLobby(id, lobby_title, passlen, connected, required, gameHasbegun) {
   let lock_icon, disablePass, disableJoin, buttonIcon = '<i class="fas fa-sign-in-alt"></i> ';
   if(passlen == 0 || passlen == undefined) {
@@ -79,16 +109,19 @@ function renderLobby(id, lobby_title, passlen, connected, required, gameHasbegun
   lobby_list.innerHTML += newLobbyNode;
   if(connected == required || gameHasbegun == true) document.getElementById(id).className += ' closed_lobby';
 }
+// Event function for join lobby buttons. Check if password was correct or not
 // eslint-disable-next-line no-unused-vars
 function addJoinEvent(lobbyId) {
   console.log('Join to ', lobbyId);
   let pass = document.getElementById(lobbyId).getElementsByClassName('pass_wrap')[0].querySelector('#pass_input').value;
   socket.emit('can_i_join_lobby', lobbyId, pass);
 }
+// Affirm connection to lobby
 socket.on('welcome', (lobbyId) => {
   let required = document.getElementById(lobbyId).getElementsByClassName('players_count')[0].querySelector('.required').textContent;
   connectToLobby(lobbyId, required);
 });
+// Joining to lobby
 function connectToLobby(lobbyId, required) {
   let userProfile = fs.readFileSync('./cfg.json');
   userProfile = userProfile.slice(0, -1);
@@ -96,6 +129,7 @@ function connectToLobby(lobbyId, required) {
   fs.writeFileSync('./cfg.json', userProfile);
   ipc.send('success_join_lobby', 'arg');
 }
+// Regret connection
 socket.on('no_welcome', (cause, lobbyId) => {
   if(cause == 'pass') {
     document.getElementById(lobbyId).getElementsByClassName('pass_wrap')[0].querySelector('#pass_input').id = "wrong_input";
@@ -112,14 +146,8 @@ socket.on('no_welcome', (cause, lobbyId) => {
     console.log('Game has already begun.');
   }
 });
-socket.emit('fetch_user_stats', username);
-socket.on('pull_user_stats', (userstats) => {
-  let stats = JSON.parse(userstats);
-  console.log('stats: ', stats);
-  console.log('stats.lvl, pp', stats.lvl, stats.pp);
-  document.getElementById('user_profile_userlvl').innerText = `${stats.lvl}lvl | ${stats.pp}pp`;
-});
 socket.emit('fetch_lobby_list'); // Asks server to give this client all lobbies
+// Get lobby list from the server
 socket.on('pull_lobby_list', (lobbyJson) => {
   console.log('LobbyJson', lobbyJson);
   let lobbyJsonToList = JSON.parse(lobbyJson).lobbyList;
@@ -129,6 +157,7 @@ socket.on('pull_lobby_list', (lobbyJson) => {
   console.log(lobbyJson);
 });
 socket.emit('fetch_message_list'); // And messages
+// Get message list from the server 
 socket.on('pull_message_list', (messageListJson) => {
   console.log(messageListJson);
   let newMes;
@@ -153,13 +182,16 @@ socket.on('pull_message_list', (messageListJson) => {
   let last = items[items.length-1];
   if(last != undefined) last.scrollIntoView();
 });
+// Rerender lobby list when new lobby was created
 socket.on('new_lobby_created', (id, lobby_title, passlen, connected, required) => {
   renderLobby(id, lobby_title, passlen, connected, required, false);
 });
+// Fetch lobby list from the server
 socket.on('lobbyListChanges', () => {
   lobby_list.innerHTML = '';
   socket.emit('fetch_lobby_list');
 });
+// Render new message in message list
 socket.on('newMessage', (userName, mes) => {
   let localTime = new Date();
   localTime = localTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
